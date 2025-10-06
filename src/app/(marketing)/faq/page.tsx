@@ -1,150 +1,170 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const categories = [
+  {
+    title: "Reservations & dining",
+    badge: "Plan ahead",
+    questions: [
+      {
+        question: "Do I need a reservation?",
+        answer:
+          "Walk-ins are always welcome, but we recommend reserving for dinner and weekend services to guarantee your table.",
+      },
+      {
+        question: "How far in advance can I book?",
+        answer:
+          "Reservations open 30 days in advance. For celebrations or parties of 8 or more, we invite you to reach out earlier so we can plan together.",
+      },
+      {
+        question: "Do you accommodate dietary restrictions?",
+        answer:
+          "Absolutely. Let us know when booking or speak with your server—we can adapt menus for allergies, vegetarian, vegan, and gluten-free guests.",
+      },
+    ],
+  },
+  {
+    title: "Menu & ingredients",
+    badge: "Seasonal",
+    questions: [
+      {
+        question: "Is your menu seasonal?",
+        answer:
+          "Our menu shifts with the Baltic seasons. We collaborate with farmers and foragers, so dishes evolve as produce becomes available.",
+      },
+      {
+        question: "Do you offer vegetarian and vegan options?",
+        answer:
+          "Yes. Each menu features dedicated vegetarian dishes, and our chefs are happy to craft vegan courses with advance notice.",
+      },
+      {
+        question: "Can I view the menu before visiting?",
+        answer:
+          "Current menus are published online and refreshed weekly. We also share daily specials through our social media channels.",
+      },
+    ],
+  },
+  {
+    title: "Orders & takeaway",
+    badge: "To-go",
+    questions: [
+      {
+        question: "Do you offer takeaway or delivery?",
+        answer:
+          "Takeaway is available to collect from the restaurant. For business orders we can prepare invoices and organise scheduled pickups.",
+      },
+      {
+        question: "How do I place a takeaway order?",
+        answer:
+          "Order online through our website or give us a call. Most orders are ready within 20–30 minutes depending on service volume.",
+      },
+      {
+        question: "What payment methods do you accept?",
+        answer:
+          "We accept cash, major credit cards, and contactless payments. Invoices for corporate orders can be settled within 24 hours.",
+      },
+    ],
+  },
+  {
+    title: "Location & hours",
+    badge: "Visit",
+    questions: [
+      {
+        question: "Where are you located?",
+        answer:
+          "You&apos;ll find us in Tallinn Old Town with nearby parking and convenient public transport links. Our locations page includes maps and directions.",
+      },
+      {
+        question: "What are your opening hours?",
+        answer:
+          "Service hours vary seasonally. Check the locations page or call us for the latest schedule before you arrive.",
+      },
+    ],
+  },
+];
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  return (
+    <details className="group rounded-2xl border border-border/60 bg-muted/20 p-5 transition hover:border-border hover:bg-muted/40">
+      <summary className="flex cursor-pointer items-center justify-between gap-4 text-left [&::-webkit-details-marker]:hidden">
+        <span className="text-base font-semibold text-foreground">{question}</span>
+        <span className="text-sm font-medium text-primary transition group-open:rotate-45">+</span>
+      </summary>
+      <p className="mt-3 text-sm text-muted-foreground">{answer}</p>
+    </details>
+  );
+}
+
 export default function FAQPage() {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-6 py-12">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-neutral-900">Frequently Asked Questions</h1>
-        <p className="text-sm text-neutral-500">
-          Find answers to common questions about dining at Restoran Kiisi.
-        </p>
-      </header>
-
-      <div className="space-y-6">
-        <div className="space-y-6">
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-neutral-900">Reservations & Dining</h2>
-            
-            <div className="space-y-4">
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Do I need a reservation?</h3>
-                <p className="text-sm text-neutral-600">
-                  While walk-ins are welcome, we highly recommend making a reservation, especially for dinner service 
-                  and weekend dining. You can make reservations online or by calling us directly.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">How far in advance can I make a reservation?</h3>
-                <p className="text-sm text-neutral-600">
-                  Reservations can be made up to 30 days in advance. For special occasions or large groups, 
-                  we recommend booking as early as possible.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Do you accommodate dietary restrictions?</h3>
-                <p className="text-sm text-neutral-600">
-                  Yes, we're happy to accommodate dietary restrictions and allergies. Please inform us when 
-                  making your reservation or speak with your server about any specific needs.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-neutral-900">Menu & Food</h2>
-            
-            <div className="space-y-4">
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Is your menu seasonal?</h3>
-                <p className="text-sm text-neutral-600">
-                  Yes, our menu changes seasonally to feature the freshest local ingredients. We work closely 
-                  with Estonian farmers and producers to bring you authentic, seasonal flavors.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Do you offer vegetarian and vegan options?</h3>
-                <p className="text-sm text-neutral-600">
-                  Absolutely! We have several vegetarian and vegan dishes on our menu, and our chefs can 
-                  modify many other dishes to meet your dietary preferences.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Can I see the menu before visiting?</h3>
-                <p className="text-sm text-neutral-600">
-                  Yes, you can view our current menu on our website. We also post daily specials on our 
-                  social media channels.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-neutral-900">Orders & Takeaway</h2>
-            
-            <div className="space-y-4">
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Do you offer takeaway or delivery?</h3>
-                <p className="text-sm text-neutral-600">
-                  Yes, we offer takeaway orders that you can pick up at the restaurant. We also provide 
-                  invoice-by-email service for business orders.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">How do I place a takeaway order?</h3>
-                <p className="text-sm text-neutral-600">
-                  You can place takeaway orders through our website or by calling the restaurant directly. 
-                  Orders are typically ready within 20-30 minutes.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">What payment methods do you accept?</h3>
-                <p className="text-sm text-neutral-600">
-                  We accept cash, all major credit cards, and contactless payments. For takeaway orders, 
-                  you can pay on-site or request an invoice by email.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-neutral-900">Location & Hours</h2>
-            
-            <div className="space-y-4">
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">Where are you located?</h3>
-                <p className="text-sm text-neutral-600">
-                  We're located in the heart of Tallinn Old Town, easily accessible by public transport 
-                  and with nearby parking options. Check our locations page for detailed directions.
-                </p>
-              </div>
-
-              <div className="rounded-lg border border-neutral-200 bg-white p-4 shadow-sm">
-                <h3 className="font-semibold text-neutral-900 mb-2">What are your opening hours?</h3>
-                <p className="text-sm text-neutral-600">
-                  Our hours vary by day and season. Please check our locations page for current opening 
-                  hours, or call us directly for the most up-to-date information.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-          <h2 className="text-xl font-semibold text-neutral-900 mb-4">Still Have Questions?</h2>
-          <p className="text-sm text-neutral-600 mb-6">
-            Can't find the answer you're looking for? Our team is here to help. Contact us directly 
-            and we'll be happy to assist you.
+    <div className="mx-auto max-w-5xl space-y-16 px-6 py-16">
+      <section className="space-y-6 text-center md:text-left">
+        <Badge className="mx-auto md:mx-0" variant="outline">
+          Frequently asked questions
+        </Badge>
+        <div className="space-y-3">
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">Questions &amp; answers</h1>
+          <p className="text-base text-muted-foreground md:max-w-2xl">
+            Discover everything you need to know about dining with us—from reservations to takeaway and special requests.
           </p>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <a
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-amber-700"
-            >
-              Contact Us
-            </a>
-            <a
-              href="tel:+37255512345"
-              className="inline-flex items-center justify-center rounded-full border border-amber-600 px-6 py-3 text-sm font-semibold text-amber-600 hover:bg-amber-50"
-            >
-              Call +372 555 12345
-            </a>
-          </div>
         </div>
-      </div>
+      </section>
+
+      <section className="space-y-6">
+        {categories.map((category) => (
+          <Card key={category.title}>
+            <CardHeader className="space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <CardTitle>{category.title}</CardTitle>
+                <Badge variant="subtle">{category.badge}</Badge>
+              </div>
+              <CardDescription>
+                {category.title === "Reservations & dining"
+                  ? "Plan the perfect visit to our Old Town dining room."
+                  : category.title === "Menu & ingredients"
+                    ? "Explore how we source and craft every dish."
+                    : category.title === "Orders & takeaway"
+                      ? "Enjoy Kiisi at home or at the office."
+                      : "Know when to visit and how to find us."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {category.questions.map((question) => (
+                <FAQItem key={question.question} question={question.question} answer={question.answer} />
+              ))}
+            </CardContent>
+          </Card>
+        ))}
+      </section>
+
+      <section>
+        <Card className="text-center">
+          <CardHeader className="space-y-3">
+            <CardTitle className="text-2xl">Still curious?</CardTitle>
+            <CardDescription>
+              Can&apos;t find what you&apos;re looking for? Our guest relations team is happy to help plan your next visit.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <p>
+              Email us at
+              <a href="mailto:hello@restorankiisi.ee" className="font-medium text-primary">
+                &nbsp;hello@restorankiisi.ee
+              </a>
+              &nbsp;or call +372 555 12345.
+            </p>
+            <p>
+              Prefer to chat in person? Stop by between 15:00 and 17:00 daily and we&apos;ll be ready with recommendations.
+            </p>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }
