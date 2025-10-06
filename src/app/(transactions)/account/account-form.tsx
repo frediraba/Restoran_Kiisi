@@ -28,7 +28,7 @@ export function AccountForm({ profile, locations }: AccountFormProps) {
 
   return (
     <form action={(formData) => startTransition(() => action(formData))}>
-      <Card className="border-none bg-card shadow-xl shadow-primary/10">
+      <Card className="border-primary/15 bg-white/95 shadow-xl shadow-primary/10">
         <CardHeader className="space-y-1 pb-4">
           <CardTitle className="text-2xl">Profile details</CardTitle>
           <CardDescription>
@@ -84,7 +84,7 @@ export function AccountForm({ profile, locations }: AccountFormProps) {
             />
           </div>
 
-          <div className="flex items-start gap-3 rounded-2xl border border-border/60 bg-muted/50 p-4">
+          <div className="flex items-start gap-3 rounded-2xl border border-primary/15 bg-primary/5 p-4">
             <Checkbox id="marketingOptIn" name="marketingOptIn" defaultChecked={profile.marketingOptIn} />
             <div className="space-y-1 text-sm">
               <Label htmlFor="marketingOptIn" className="font-medium">
@@ -107,7 +107,7 @@ export function AccountForm({ profile, locations }: AccountFormProps) {
             </div>
           ) : null}
         </CardContent>
-        <div className="flex flex-col gap-3 border-t border-border/60 bg-muted/40 px-8 py-6 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-3 border-t border-primary/15 bg-primary/5 px-8 py-6 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
           <p>{pending ? "Saving your preferences..." : "Changes apply immediately across Kiisi experiences."}</p>
           <Button type="submit" className="h-11 px-6" disabled={pending}>
             {pending ? "Saving..." : "Save profile"}

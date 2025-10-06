@@ -46,7 +46,7 @@ export function AccountSignInForm() {
   }
 
   return (
-    <Card className="relative overflow-hidden border-none bg-card shadow-xl shadow-primary/10">
+    <Card className="relative overflow-hidden border-primary/20 bg-white/95 shadow-xl shadow-primary/15">
       <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
       <CardHeader className="relative space-y-2 pb-2">
         <CardTitle className="text-2xl">Sign in to Kiisi</CardTitle>

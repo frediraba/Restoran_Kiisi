@@ -7,7 +7,7 @@ export function Card({ className, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-3xl border border-border/80 bg-card shadow-lg shadow-black/5 transition hover:-translate-y-1 hover:shadow-xl",
+        "group relative overflow-hidden rounded-[2.5rem] border border-primary/15 bg-card/95 shadow-[0_20px_50px_rgba(255,125,0,0.14)] backdrop-blur transition hover:-translate-y-1 hover:shadow-[0_26px_60px_rgba(255,125,0,0.18)]",
         className,
       )}
       {...props}
@@ -42,5 +42,5 @@ export function CardDescription({ className, ...props }: CardDescriptionProps) {
 export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {}
 
 export function CardFooter({ className, ...props }: CardFooterProps) {
-  return <div className={cn("flex items-center justify-between gap-2 border-t border-border/60 bg-muted/30 px-8 py-5", className)} {...props} />;
+  return <div className={cn("flex items-center justify-between gap-2 border-t border-primary/15 bg-primary/5 px-8 py-5", className)} {...props} />;
 }

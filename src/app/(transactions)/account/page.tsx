@@ -84,8 +84,8 @@ export default async function AccountPage() {
   return (
     <div className="relative mx-auto max-w-6xl space-y-10 px-6 py-12">
       <div className="pointer-events-none absolute inset-x-10 -top-12 h-64 rounded-full bg-primary/10 blur-3xl" />
-      <Card className="relative overflow-hidden border-none bg-gradient-to-br from-primary/15 via-card to-card shadow-2xl shadow-primary/20">
-        <div className="pointer-events-none absolute -right-24 top-0 h-56 w-56 rounded-full bg-accent/20 blur-3xl" />
+      <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-white via-primary/10 to-white shadow-[0_30px_80px_rgba(255,125,0,0.18)]">
+        <div className="pointer-events-none absolute -right-24 top-0 h-56 w-56 rounded-full bg-primary/15 blur-3xl" />
         <CardHeader className="relative z-10 flex flex-col gap-4 pb-6 md:flex-row md:items-center md:justify-between">
           <div className="space-y-3">
             <CardTitle className="text-3xl md:text-4xl">Your Kiisi account</CardTitle>
@@ -96,7 +96,7 @@ export default async function AccountPage() {
           </div>
           <AccountSignOutButton />
         </CardHeader>
-        <CardFooter className="relative z-10 grid gap-4 border-t border-white/40 bg-white/40 px-8 py-6 text-sm text-muted-foreground backdrop-blur md:grid-cols-3">
+        <CardFooter className="relative z-10 grid gap-4 border-t border-primary/20 bg-primary/5 px-8 py-6 text-sm text-muted-foreground backdrop-blur md:grid-cols-3">
           <div className="space-y-1">
             <p className="text-xs uppercase tracking-[0.24em]">Orders</p>
             <p className="text-lg font-semibold text-foreground">{recentOrders.length}</p>
@@ -122,14 +122,14 @@ export default async function AccountPage() {
           locations={locations.map((location) => ({ slug: location.slug, name: location.name }))}
         />
         <div className="space-y-6">
-          <Card className="border-none bg-card shadow-xl shadow-primary/10">
+          <Card className="border-primary/15 bg-white/95 shadow-xl shadow-primary/10">
             <CardHeader>
               <CardTitle className="text-xl">Recent orders</CardTitle>
               <CardDescription>Revisit your latest takeaway celebrations from Kiisi.</CardDescription>
             </CardHeader>
             <CardContent>
               {recentOrders.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border/70 bg-muted/30 px-6 py-10 text-center text-sm text-muted-foreground">
+                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-6 py-10 text-center text-sm text-muted-foreground">
                   <p>No orders yet. Ready for your first takeaway feast?</p>
                 </div>
               ) : (
@@ -137,7 +137,7 @@ export default async function AccountPage() {
                   {recentOrders.map((order) => (
                     <li
                       key={order.id}
-                      className="rounded-2xl border border-border/60 bg-gradient-to-br from-card via-card to-primary/5 p-5 shadow-sm shadow-primary/10"
+                      className="rounded-2xl border border-primary/15 bg-gradient-to-br from-white via-primary/5 to-white p-5 shadow-sm shadow-primary/10"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="space-y-1">
@@ -162,14 +162,14 @@ export default async function AccountPage() {
               )}
             </CardContent>
           </Card>
-          <Card className="border-none bg-card shadow-xl shadow-primary/10">
+          <Card className="border-primary/15 bg-white/95 shadow-xl shadow-primary/10">
             <CardHeader>
               <CardTitle className="text-xl">Reservations</CardTitle>
               <CardDescription>Track your upcoming and past dining room experiences.</CardDescription>
             </CardHeader>
             <CardContent>
               {recentReservations.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-border/70 bg-muted/30 px-6 py-10 text-center text-sm text-muted-foreground">
+                <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-6 py-10 text-center text-sm text-muted-foreground">
                   <p>No reservations booked yet. We would love to host you soon.</p>
                 </div>
               ) : (
@@ -177,7 +177,7 @@ export default async function AccountPage() {
                   {recentReservations.map((reservation) => (
                     <li
                       key={reservation.id}
-                      className="rounded-2xl border border-border/60 bg-gradient-to-br from-card via-card to-accent/5 p-5 shadow-sm shadow-accent/10"
+                      className="rounded-2xl border border-primary/15 bg-gradient-to-br from-white via-primary/5 to-white p-5 shadow-sm shadow-primary/10"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3">
                         <div className="space-y-1">

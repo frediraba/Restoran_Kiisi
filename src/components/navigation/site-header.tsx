@@ -17,20 +17,20 @@ export async function SiteHeader() {
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-neutral-200 bg-neutral-50">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-neutral-500 md:flex-row md:items-center md:justify-between">
+    <footer className="border-t border-primary/15 bg-gradient-to-br from-white via-primary/5 to-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-8 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-semibold text-neutral-900">Restoran Kiisi</p>
-          <p className="text-xs">Seasonal cuisine from Tallinn Old Town.</p>
+          <p className="font-semibold text-foreground">Restoran Kiisi</p>
+          <p className="text-xs text-primary/80">Seasonal cuisine from Tallinn Old Town.</p>
         </div>
         <div className="flex flex-wrap gap-4 text-xs">
-          <Link href="/privacy" className="hover:text-neutral-900">
+          <Link href="/privacy" className="transition hover:text-primary">
             Privacy
           </Link>
-          <Link href="/terms" className="hover:text-neutral-900">
+          <Link href="/terms" className="transition hover:text-primary">
             Terms
           </Link>
-          <Link href="/contact" className="hover:text-neutral-900">
+          <Link href="/contact" className="transition hover:text-primary">
             Contact
           </Link>
         </div>

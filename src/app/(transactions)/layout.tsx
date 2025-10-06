@@ -9,11 +9,11 @@ export default function TransactionsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50 pb-24 text-neutral-900 md:pb-0">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-white via-primary/5 to-white pb-24 text-foreground md:pb-0">
       <Suspense fallback={<SkeletonHeader />}>
         <SiteHeader />
       </Suspense>
-      <main className="flex-1 bg-neutral-50">{children}</main>
+      <main className="flex-1 bg-transparent">{children}</main>
       <Suspense fallback={<SkeletonFooter />}>
         <SiteFooter />
       </Suspense>

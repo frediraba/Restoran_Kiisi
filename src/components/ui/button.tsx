@@ -5,13 +5,15 @@ type ButtonVariant = "default" | "secondary" | "outline" | "ghost" | "link";
 type ButtonSize = "sm" | "default" | "lg" | "icon";
 
 const baseStyles =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60 focus-visible:ring-offset-background";
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60 focus-visible:ring-offset-background";
 
 const variantStyles: Record<ButtonVariant, string> = {
-  default: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-  secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-  outline: "border border-input bg-background text-foreground hover:bg-muted hover:text-foreground",
-  ghost: "text-muted-foreground hover:bg-muted hover:text-foreground",
+  default:
+    "bg-primary text-primary-foreground shadow-[0_12px_32px_rgba(255,125,0,0.28)] hover:bg-primary/90",
+  secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+  outline:
+    "border border-primary/40 bg-background text-primary shadow-sm hover:border-primary/60 hover:bg-primary/10",
+  ghost: "text-primary hover:bg-primary/10",
   link: "text-primary underline-offset-4 hover:text-primary/80 hover:underline",
 };
 

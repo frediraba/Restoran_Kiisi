@@ -35,7 +35,7 @@ export function ReservationForm({ locations }: ReservationFormProps) {
   const [pending, startTransition] = useTransition();
 
   return (
-    <Card className="border-border/70 bg-card/95">
+    <Card className="border-primary/15 bg-white/95">
       <form
         action={(formData) => {
           startTransition(() => action(formData));
@@ -89,7 +89,7 @@ export function ReservationForm({ locations }: ReservationFormProps) {
             <Textarea id="notes" name="notes" rows={3} />
           </div>
 
-          <div className="rounded-3xl border border-dashed border-border/70 bg-muted/40 px-5 py-4 text-sm text-muted-foreground">
+          <div className="rounded-3xl border border-dashed border-primary/20 bg-primary/5 px-5 py-4 text-sm text-muted-foreground">
             Kiisi holds reservations for 15 minutes. If your preferred slot is unavailable we will offer the nearest alternatives
             automatically.
           </div>
@@ -130,13 +130,13 @@ export function ReservationForm({ locations }: ReservationFormProps) {
             </div>
           ) : null}
         </CardContent>
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 bg-muted/30 px-8 py-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary/15 bg-primary/5 px-8 py-5">
           <Button
             type="submit"
             name="intent"
             value="check"
-            variant="ghost"
-            className="bg-transparent text-muted-foreground hover:bg-muted/60"
+            variant="outline"
+            className="bg-white/70 text-primary hover:bg-primary/10"
             disabled={pending}
           >
             {pending ? "Checking…" : "Find table"}

@@ -181,7 +181,7 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
   };
 
   return (
-    <Card className="border-border/70 bg-card/95">
+    <Card className="border-primary/15 bg-white/95">
       <form
         action={(formData) => {
           startTransition(() => {
@@ -219,14 +219,14 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
             </div>
             <div className="grid gap-3">
               {lines.length === 0 ? (
-                <p className="rounded-2xl border border-dashed border-border/70 bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+                <p className="rounded-2xl border border-dashed border-primary/20 bg-primary/5 px-4 py-3 text-sm text-muted-foreground">
                   No menu items available right now.
                 </p>
               ) : null}
               {lines.map((line, index) => (
                 <div
                   key={line.id}
-                  className="grid gap-3 rounded-2xl border border-border/70 bg-background/60 p-4 md:grid-cols-[minmax(0,1fr)_120px_auto] md:items-end"
+                  className="grid gap-3 rounded-2xl border border-primary/15 bg-white/80 p-4 md:grid-cols-[minmax(0,1fr)_120px_auto] md:items-end"
                 >
                   <div className="grid gap-2">
                     <Label htmlFor={`menuItem-${line.id}`}>Menu item {lines.length > 1 ? index + 1 : ""}</Label>
@@ -259,6 +259,7 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
                     <Button
                       type="button"
                       variant="ghost"
+                      className="text-primary/70 hover:text-primary"
                       size="sm"
                       onClick={() => handleRemoveLine(line.id)}
                       disabled={lines.length <= 1}
@@ -335,7 +336,7 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
             <Textarea id="specialInstructions" name="specialInstructions" rows={3} />
           </div>
 
-          <div className="rounded-3xl border border-dashed border-border/70 bg-muted/40 px-5 py-4 text-sm text-muted-foreground">
+          <div className="rounded-3xl border border-dashed border-primary/20 bg-primary/5 px-5 py-4 text-sm text-muted-foreground">
             Service hours are enforced. Orders outside opening times will receive the next available slot or an error.
           </div>
 
@@ -359,11 +360,11 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
             </div>
           ) : null}
         </CardContent>
-        <div className="flex items-center justify-end gap-3 border-t border-border/70 bg-muted/30 px-8 py-5">
+        <div className="flex items-center justify-end gap-3 border-t border-primary/15 bg-primary/5 px-8 py-5">
           <Button
             type="submit"
-            className="bg-transparent text-muted-foreground hover:bg-muted/60"
-            variant="ghost"
+            className="bg-white/70 text-primary hover:bg-primary/10"
+            variant="outline"
             name="intent"
             value="check"
             disabled={pending}
