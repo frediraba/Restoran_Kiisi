@@ -209,39 +209,6 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                 </div>
               ) : null}
 
-              {mobile.length ? (
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-                      Quick links
-                    </span>
-                    <Separator className="flex-1" />
-                  </div>
-                  <div className="grid gap-2">
-                    {mobile.map((link) => {
-                      const active = isActivePath(pathname ?? "/", link.href);
-                      return (
-                        <Link
-                          key={link.id}
-                          href={link.href}
-                          aria-current={active ? "page" : undefined}
-                          className={cn(
-                            "rounded-2xl border border-border/50 px-4 py-3 text-sm font-medium transition",
-                            active
-                              ? "bg-primary/10 text-primary"
-                              : "text-muted-foreground hover:border-border hover:bg-muted/40 hover:text-foreground",
-                          )}
-                        >
-                          <div className="flex items-center justify-between gap-3">
-                            <span>{link.label}</span>
-                            {link.badge ? <Badge variant="outline">{link.badge}</Badge> : null}
-                          </div>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : null}
             </div>
           </div>
         ) : null}
