@@ -67,7 +67,7 @@ function outOfHoursError(message: string) {
 }
 
 function bookingIntervalMinutes(policy?: { bookingIntervalMinutes: number }) {
-  return policy?.bookingIntervalMinutes ?? 15;
+  return policy?.bookingIntervalMinutes ?? 30;
 }
 
 

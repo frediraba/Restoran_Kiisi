@@ -61,7 +61,7 @@ async function seedLocations() {
       locationId: location.id,
       maxPartySize: 12,
       minPartySize: 1,
-      bookingIntervalMinutes: 15,
+      bookingIntervalMinutes: 30,
       bufferMinutes: 10,
       waitlistEnabled: true,
     },
