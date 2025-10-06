@@ -58,26 +58,44 @@ export async function updateProfileAction(
 
 export async function signInAccountAction({ email, password }: { email: string; password: string }) {
   const normalizedEmail = email.toLowerCase();
-  let user = await prisma.guestProfile.findUnique({ where: { email: normalizedEmail } });
+  const user = await prisma.guestProfile.findUnique({ where: { email: normalizedEmail } });
 
-  if (!user) {
-    const passwordHash = await hash(withPepper(password), 12);
-    user = await prisma.guestProfile.create({
+  if (!user || !user.passwordHash) {
+    return { ok: false, error: "ACCOUNT_NOT_FOUND" };
+  }
+
+  const isValid = await compare(withPepper(password), user.passwordHash);
+  if (!isValid) {
+    return { ok: false, error: "INVALID_CREDENTIALS" };
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.set("kiisi-session", normalizedEmail, { path: "/", httpOnly: true });
+  return { ok: true };
+}
+
+export async function signUpAccountAction({ email, password }: { email: string; password: string }) {
+  const normalizedEmail = email.toLowerCase();
+  const existingProfile = await prisma.guestProfile.findUnique({ where: { email: normalizedEmail } });
+
+  if (existingProfile && existingProfile.passwordHash) {
+    return { ok: false, error: "ACCOUNT_EXISTS" };
+  }
+
+  const passwordHash = await hash(withPepper(password), 12);
+
+  if (existingProfile) {
+    await prisma.guestProfile.update({
+      where: { id: existingProfile.id },
+      data: { passwordHash },
+    });
+  } else {
+    await prisma.guestProfile.create({
       data: {
         email: normalizedEmail,
         passwordHash,
       },
     });
-  } else if (!user.passwordHash) {
-    user = await prisma.guestProfile.update({
-      where: { id: user.id },
-      data: { passwordHash: await hash(withPepper(password), 12) },
-    });
-  } else {
-    const isValid = await compare(withPepper(password), user.passwordHash);
-    if (!isValid) {
-      return { ok: false, error: "INVALID_CREDENTIALS" };
-    }
   }
 
   const cookieStore = await cookies();

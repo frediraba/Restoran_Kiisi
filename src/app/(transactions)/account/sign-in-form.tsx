@@ -8,13 +8,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-import { signInAccountAction } from "./account-actions";
+import { signInAccountAction, signUpAccountAction } from "./account-actions";
 
 export function AccountSignInForm() {
   const router = useRouter();
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [signedIn, setSignedIn] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -22,25 +23,48 @@ export function AccountSignInForm() {
     const formData = new FormData(form);
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
+    const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+    setStatusMessage(null);
 
     if (!email || !password) {
       setError("Enter both email and password.");
       return;
     }
 
+    if (mode === "sign-up" && password !== confirmPassword) {
+      setError("Passwords must match.");
+      return;
+    }
+
     setError(null);
     setPending(true);
 
-    const result = await signInAccountAction({ email, password });
+    const action = mode === "sign-in" ? signInAccountAction : signUpAccountAction;
+    const result = await action({ email, password });
 
     if (!result.ok) {
-      setError("Invalid credentials. Please try again.");
+      const message =
+        result.error === "INVALID_CREDENTIALS"
+          ? "Invalid credentials. Please try again."
+          : result.error === "ACCOUNT_NOT_FOUND"
+            ? "We couldn't find an account with that email. Create one to continue."
+            : result.error === "ACCOUNT_EXISTS"
+              ? "An account with that email already exists. Try signing in instead."
+              : mode === "sign-in"
+                ? "Unable to sign in right now. Please try again."
+                : "Unable to sign up right now. Please try again.";
+      setError(message);
       setPending(false);
       return;
     }
 
     form.reset();
-    setSignedIn(true);
+    setStatusMessage(
+      mode === "sign-in"
+        ? "Welcome back! Loading your account..."
+        : "Account created! Preparing your dashboard..."
+    );
     setPending(false);
     router.replace("/account?welcome=1");
   }
@@ -49,9 +73,13 @@ export function AccountSignInForm() {
     <Card className="relative overflow-hidden border-primary/20 bg-white/95 shadow-xl shadow-primary/15">
       <div className="pointer-events-none absolute -right-20 -top-20 h-48 w-48 rounded-full bg-primary/10 blur-3xl" />
       <CardHeader className="relative space-y-2 pb-2">
-        <CardTitle className="text-2xl">Sign in to Kiisi</CardTitle>
+        <CardTitle className="text-2xl">
+          {mode === "sign-in" ? "Sign in to Kiisi" : "Create your Kiisi account"}
+        </CardTitle>
         <CardDescription>
-          Access reservations, preferences, and loyalty perks with your Kiisi account.
+          {mode === "sign-in"
+            ? "Access reservations, preferences, and loyalty perks with your Kiisi account."
+            : "Set your password to manage reservations, orders, and personalised updates."}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -66,10 +94,22 @@ export function AccountSignInForm() {
               id="password"
               name="password"
               type="password"
-              autoComplete="current-password"
+              autoComplete={mode === "sign-in" ? "current-password" : "new-password"}
               required
             />
           </div>
+          {mode === "sign-up" ? (
+            <div className="grid gap-2">
+              <Label htmlFor="confirmPassword">Confirm password</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                autoComplete="new-password"
+                required
+              />
+            </div>
+          ) : null}
           {error ? (
             <div
               role="alert"
@@ -79,12 +119,35 @@ export function AccountSignInForm() {
               {error}
             </div>
           ) : null}
-          <Button type="submit" className="h-12" disabled={pending}>
-            {pending ? "Signing in..." : "Sign in"}
-          </Button>
-          {signedIn ? (
+          <div className="flex flex-col gap-3">
+            <Button type="submit" className="h-12" disabled={pending}>
+              {pending
+                ? mode === "sign-in"
+                  ? "Signing in..."
+                  : "Creating account..."
+                : mode === "sign-in"
+                  ? "Sign in"
+                  : "Sign up"}
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="h-10 justify-start px-0 text-left text-sm text-primary hover:text-primary"
+              onClick={() => {
+                setMode((current) => (current === "sign-in" ? "sign-up" : "sign-in"));
+                setError(null);
+                setStatusMessage(null);
+              }}
+              disabled={pending}
+            >
+              {mode === "sign-in"
+                ? "Need an account? Sign up"
+                : "Already have an account? Sign in"}
+            </Button>
+          </div>
+          {statusMessage ? (
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              Welcome back! Loading your account...
+              {statusMessage}
             </p>
           ) : null}
         </form>
