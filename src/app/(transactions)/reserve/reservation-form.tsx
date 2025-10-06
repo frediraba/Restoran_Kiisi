@@ -1,7 +1,6 @@
 "use client";
 
-import { useTransition, useState } from "react";
-import { useFormState } from "react-dom";
+import { useTransition, useState, useActionState } from "react";
 
 import { createReservationAction } from "./actions";
 import { initialReservationFormState, type ReservationFormState } from "./form-state";
@@ -16,7 +15,7 @@ type ReservationFormProps = {
 };
 
 export function ReservationForm({ locations }: ReservationFormProps) {
-  const [state, action] = useFormState<ReservationFormState>(
+  const [state, action] = useActionState<ReservationFormState>(
     createReservationAction,
     initialReservationFormState,
   );

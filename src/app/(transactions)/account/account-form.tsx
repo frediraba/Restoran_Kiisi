@@ -1,7 +1,6 @@
 ﻿"use client";
 
-import { useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useTransition, useActionState } from "react";
 
 import type { GuestProfile } from "@prisma/client";
 
@@ -14,7 +13,7 @@ type AccountFormProps = {
 };
 
 export function AccountForm({ profile, locations }: AccountFormProps) {
-  const [state, action] = useFormState<AccountFormState>(
+  const [state, action] = useActionState<AccountFormState>(
     updateProfileAction,
     initialAccountState,
   );

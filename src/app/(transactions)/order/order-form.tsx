@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useEffect, useMemo, useState, useTransition, useActionState } from "react";
 
 import { createOrderAction, type OrderLineInput } from "./actions";
 import { initialOrderFormState, type OrderFormState } from "./form-state";
@@ -25,7 +24,7 @@ type OrderFormProps = {
 };
 
 export function OrderForm({ locations, menuItems }: OrderFormProps) {
-  const [state, action] = useFormState<OrderFormState>(createOrderAction, initialOrderFormState);
+  const [state, action] = useActionState<OrderFormState>(createOrderAction, initialOrderFormState);
   const [selectedItemSlug, setSelectedItemSlug] = useState(menuItems[0]?.slug ?? "");
   const [quantity, setQuantity] = useState(1);
   const [requestedTime, setRequestedTime] = useState<string>(() => {
