@@ -1,7 +1,15 @@
-﻿import { Suspense } from "react";
+import { Suspense } from "react";
 
-import { getMenuWithCategories } from "@/lib/data";
 import { SkeletonSection } from "@/components/navigation/skeletons";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { getMenuWithCategories } from "@/lib/data";
 
 function formatPrice(value: unknown) {
   if (typeof value === "number") {
@@ -24,35 +32,63 @@ async function MenuContent() {
 
   return (
     <div className="mx-auto max-w-6xl space-y-12 px-6 py-12">
+      <section className="relative overflow-hidden rounded-4xl border border-border/70 bg-gradient-to-br from-primary/10 via-background to-background px-8 py-12 shadow-lg shadow-primary/10">
+        <div className="pointer-events-none absolute -top-32 right-10 h-64 w-64 rounded-full bg-primary/20 blur-3xl" aria-hidden />
+        <div className="relative flex flex-col gap-4 text-balance text-foreground">
+          <Badge className="w-fit" variant="outline">
+            Seasonal tasting 2025
+          </Badge>
+          <h1 className="text-4xl font-semibold tracking-tight">The Kiisi menu</h1>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Bright Baltic produce, fire-grilled seafood, and foraged herbs from the forests around Tallinn. Explore chef-selected
+            pairings or build your own experience from the á la carte.
+          </p>
+        </div>
+      </section>
+
       {categories.map((category) => (
-        <section key={category.id} className="space-y-4">
-          <header>
-            <h2 className="text-2xl font-semibold text-neutral-900">{category.name}</h2>
-            {category.description ? (
-              <p className="mt-1 text-sm text-neutral-500">{category.description}</p>
-            ) : null}
-          </header>
+        <section key={category.id} className="space-y-6">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+            <div className="space-y-2">
+              <h2 className="text-2xl font-semibold text-foreground">{category.name}</h2>
+              {category.description ? (
+                <p className="max-w-2xl text-sm text-muted-foreground">{category.description}</p>
+              ) : null}
+            </div>
+            <Badge variant="subtle" className="w-fit">
+              {category.menuItems.length} selections
+            </Badge>
+          </div>
           <div className="grid gap-6 md:grid-cols-2">
             {category.menuItems.map((item) => (
-              <article key={item.id} className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-neutral-900">{item.name}</h3>
-                    {item.description ? (
-                      <p className="mt-2 text-sm text-neutral-600">{item.description}</p>
-                    ) : null}
-                    {Array.isArray(item.dietaryTags) && item.dietaryTags.length > 0 ? (
-                      <p className="mt-3 text-xs uppercase tracking-wide text-neutral-400">
-                        {item.dietaryTags.join(" • ")}
-                      </p>
-                    ) : null}
+              <Card
+                key={item.id}
+                className={item.isAvailable ? "h-full" : "h-full border-amber-300/80 bg-amber-50/80"}
+              >
+                <CardHeader className="gap-3 p-6 pb-0">
+                  <div className="flex items-start justify-between gap-4">
+                    <CardTitle className="text-xl">{item.name}</CardTitle>
+                    <span className="text-sm font-semibold text-foreground">€{formatPrice(item.price)}</span>
                   </div>
-                  <p className="text-sm font-semibold text-neutral-900">€{formatPrice(item.price)}</p>
-                </div>
-                {!item.isAvailable ? (
-                  <p className="mt-4 text-xs font-medium text-amber-600">Currently unavailable</p>
-                ) : null}
-              </article>
+                  {item.description ? <CardDescription>{item.description}</CardDescription> : null}
+                </CardHeader>
+                <CardContent className="p-6 pt-4">
+                  {Array.isArray(item.dietaryTags) && item.dietaryTags.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      {item.dietaryTags.map((tag) => (
+                        <Badge key={tag} variant="outline">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  ) : null}
+                  {!item.isAvailable ? (
+                    <Badge variant="subtle" className="mt-4 bg-amber-100 text-amber-700">
+                      Currently unavailable
+                    </Badge>
+                  ) : null}
+                </CardContent>
+              </Card>
             ))}
           </div>
         </section>

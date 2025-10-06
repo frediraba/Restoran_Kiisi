@@ -1,33 +1,71 @@
-﻿export default function ContactPage() {
+import Link from "next/link";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function ContactPage() {
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12 space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold">Contact Restoran Kiisi</h1>
-        <p className="text-sm text-neutral-500">
-          Reach our reservations team or events specialists. We reply within one business day.
-        </p>
-      </header>
-      <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm space-y-4">
-        <div>
-          <h2 className="text-lg font-semibold">General inquiries</h2>
-          <p className="mt-2 text-sm text-neutral-500">call +372 5555 1234 or email hello@restorankiisi.ee</p>
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold">Reservations</h2>
-          <p className="mt-2 text-sm text-neutral-500">
-            Reserve online at <a className="text-amber-600" href="/reserve">restorankiisi.ee/reserve</a> or email seats@restorankiisi.ee
+    <div className="mx-auto max-w-4xl space-y-10 px-6 py-12">
+      <section className="rounded-4xl border border-border/70 bg-gradient-to-br from-primary/10 via-background to-background px-8 py-12 shadow-lg shadow-primary/10">
+        <div className="flex flex-col gap-4 text-balance">
+          <Badge variant="outline" className="w-fit">
+            Hospitality team
+          </Badge>
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">Contact Restoran Kiisi</h1>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Reach our reservations team or events specialists. We reply within one business day.
           </p>
         </div>
-        <div>
-          <h2 className="text-lg font-semibold">Catering & Events</h2>
-          <p className="mt-2 text-sm text-neutral-500">events@restorankiisi.ee · +372 5555 9876</p>
-        </div>
       </section>
-      <section className="rounded-2xl border border-dashed border-neutral-200 bg-neutral-50 p-6 text-sm text-neutral-500">
-        <p>
-          Looking to partner or book the whole venue? Share your event requirements and our team will prepare a proposal within 48 hours.
-        </p>
-      </section>
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="border-border/70">
+          <CardHeader className="p-6 pb-0">
+            <CardTitle className="text-lg">General inquiries</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 p-6 pt-4 text-sm text-muted-foreground">
+            <p>Call +372 5555 1234</p>
+            <p>
+              Email <Link href="mailto:hello@restorankiisi.ee" className="font-semibold text-primary">hello@restorankiisi.ee</Link>
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-border/70">
+          <CardHeader className="p-6 pb-0">
+            <CardTitle className="text-lg">Reservations</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 p-6 pt-4 text-sm text-muted-foreground">
+            <p>
+              Reserve online at <Link href="/reserve" className="font-semibold text-primary">restorankiisi.ee/reserve</Link>
+            </p>
+            <p>
+              Email <Link href="mailto:seats@restorankiisi.ee" className="font-semibold text-primary">seats@restorankiisi.ee</Link>
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="border-border/70">
+          <CardHeader className="p-6 pb-0">
+            <CardTitle className="text-lg">Catering &amp; Events</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 p-6 pt-4 text-sm text-muted-foreground">
+            <p>Email <Link href="mailto:events@restorankiisi.ee" className="font-semibold text-primary">events@restorankiisi.ee</Link></p>
+            <p>Phone +372 5555 9876</p>
+          </CardContent>
+        </Card>
+        <Card className="border-dashed border-border/70 bg-muted/20">
+          <CardHeader className="p-6 pb-0">
+            <CardTitle className="text-lg">Private hire</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 p-6 pt-4 text-sm text-muted-foreground">
+            <p>
+              Looking to partner or book the whole venue? Share your event requirements and our team will prepare a proposal
+              within 48 hours.
+            </p>
+            <p>
+              Email <Link href="mailto:partners@restorankiisi.ee" className="font-semibold text-primary">partners@restorankiisi.ee</Link>
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
