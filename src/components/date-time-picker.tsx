@@ -58,6 +58,43 @@ function combineLocalDateTime(date: string, time: string) {
   return `${date}T${time}`;
 }
 
+function normalizeTimeValue(rawTime: string, stepMinutes: number, fallback: string) {
+  if (!rawTime) {
+    return fallback;
+  }
+
+  const [hoursPart, minutesPart] = rawTime.split(":");
+  const hours = Number.parseInt(hoursPart, 10);
+  const minutes = Number.parseInt(minutesPart, 10);
+
+  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
+    return fallback;
+  }
+
+  const totalMinutes = hours * 60 + minutes;
+  const stepCount = Math.round(totalMinutes / stepMinutes);
+  const maxStepsPerDay = Math.floor((24 * 60) / stepMinutes) - 1;
+  const clampedStep = Math.min(Math.max(stepCount, 0), maxStepsPerDay);
+  const normalizedMinutes = clampedStep * stepMinutes;
+  const normalizedHours = Math.floor(normalizedMinutes / 60);
+  const remainderMinutes = normalizedMinutes % 60;
+
+  const normalizedHoursString = `${normalizedHours}`.padStart(2, "0");
+  const normalizedMinutesString = `${remainderMinutes}`.padStart(2, "0");
+
+  return `${normalizedHoursString}:${normalizedMinutesString}`;
+}
+
+function normalizeLocalValue(value: string, stepMinutes: number) {
+  const parts = fromLocalInputValue(value);
+  if (!parts) {
+    return null;
+  }
+
+  const normalizedTime = normalizeTimeValue(parts.time, stepMinutes, parts.time);
+  return combineLocalDateTime(parts.date, normalizedTime);
+}
+
 export function DateTimePickerField({
   id,
   label,
@@ -79,20 +116,31 @@ export function DateTimePickerField({
     return toLocalInputValue(date);
   }, [stepMinutes]);
 
-  const normalizedValue = value || fallbackValue;
+  const normalizedValue = useMemo(() => {
+    if (value) {
+      const normalized = normalizeLocalValue(value, stepMinutes);
+      if (normalized) {
+        return normalized;
+      }
+    }
+    return fallbackValue;
+  }, [value, stepMinutes, fallbackValue]);
 
-  const parsed = useMemo(() => fromLocalInputValue(normalizedValue) ?? fromLocalInputValue(fallbackValue)!, [normalizedValue, fallbackValue]);
+  const parsed = useMemo(
+    () => fromLocalInputValue(normalizedValue) ?? fromLocalInputValue(fallbackValue)!,
+    [normalizedValue, fallbackValue],
+  );
 
   const [selectedDate, setSelectedDate] = useState(parsed.date);
   const [selectedTime, setSelectedTime] = useState(parsed.time);
 
   useEffect(() => {
-    const nextParsed = fromLocalInputValue(value);
+    const nextParsed = fromLocalInputValue(normalizedValue);
     if (nextParsed) {
       setSelectedDate(nextParsed.date);
       setSelectedTime(nextParsed.time);
     }
-  }, [value]);
+  }, [normalizedValue]);
 
   return (
     <div className={cn("grid gap-3", className)}>
@@ -141,7 +189,7 @@ export function DateTimePickerField({
           step={stepMinutes * 60}
           value={selectedTime}
           onChange={(event) => {
-            const nextTime = event.target.value;
+            const nextTime = normalizeTimeValue(event.target.value, stepMinutes, selectedTime);
             setSelectedTime(nextTime);
             onChange(combineLocalDateTime(selectedDate, nextTime));
           }}
