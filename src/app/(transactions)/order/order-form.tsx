@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition, useActionState } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition, useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,6 +29,12 @@ type MenuItemOption = {
   price: number;
 };
 
+type OrderLineState = {
+  id: number;
+  menuItemId: string;
+  quantity: number;
+};
+
 type OrderFormProps = {
   locations: LocationOption[];
   menuItems: MenuItemOption[];
@@ -36,8 +42,19 @@ type OrderFormProps = {
 
 export function OrderForm({ locations, menuItems }: OrderFormProps) {
   const [state, action] = useActionState<OrderFormState>(createOrderAction, initialOrderFormState);
-  const [selectedItemSlug, setSelectedItemSlug] = useState(menuItems[0]?.slug ?? "");
-  const [quantity, setQuantity] = useState(1);
+  const [lines, setLines] = useState<OrderLineState[]>(() => {
+    if (menuItems.length === 0) {
+      return [];
+    }
+    return [
+      {
+        id: 0,
+        menuItemId: menuItems[0]!.slug,
+        quantity: 1,
+      },
+    ];
+  });
+  const nextLineId = useRef(lines.length);
   const defaultReadyAt = useMemo(() => getDefaultLocalValue(18, 0), []);
   const [requestedTime, setRequestedTime] = useState<string>(defaultReadyAt);
   const [customTime, setCustomTime] = useState(false);
@@ -70,18 +87,98 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
   const [activeQuickPickId, setActiveQuickPickId] = useState<string | null>("asap");
 
   const cartValue = useMemo(() => {
-    const line: OrderLineInput = {
-      menuItemId: selectedItemSlug,
-      quantity,
-    };
-    return JSON.stringify([line]);
-  }, [selectedItemSlug, quantity]);
+    const cartLines: OrderLineInput[] = lines
+      .filter((line) => line.menuItemId)
+      .map((line) => ({
+        menuItemId: line.menuItemId,
+        quantity: Math.max(1, Math.min(10, Number.isFinite(line.quantity) ? line.quantity : 1)),
+      }));
+    return JSON.stringify(cartLines);
+  }, [lines]);
 
   useEffect(() => {
     if (state.status === "success") {
-      setQuantity(1);
+      if (menuItems.length === 0) {
+        setLines([]);
+        nextLineId.current = 0;
+        return;
+      }
+      setLines([
+        {
+          id: 0,
+          menuItemId: menuItems[0]!.slug,
+          quantity: 1,
+        },
+      ]);
+      nextLineId.current = 1;
     }
-  }, [state]);
+  }, [menuItems, state]);
+
+  useEffect(() => {
+    setLines((previous) => {
+      if (menuItems.length === 0) {
+        nextLineId.current = 0;
+        return [];
+      }
+      if (previous.length === 0) {
+        nextLineId.current = 1;
+        return [
+          {
+            id: 0,
+            menuItemId: menuItems[0]!.slug,
+            quantity: 1,
+          },
+        ];
+      }
+      const available = new Set(menuItems.map((item) => item.slug));
+      let changed = false;
+      const normalized = previous.map((line) => {
+        if (!available.has(line.menuItemId)) {
+          changed = true;
+          return { ...line, menuItemId: menuItems[0]!.slug };
+        }
+        return line;
+      });
+      return changed ? normalized : previous;
+    });
+  }, [menuItems]);
+
+  const handleAddLine = () => {
+    if (menuItems.length === 0) {
+      return;
+    }
+    setLines((previous) => [
+      ...previous,
+      {
+        id: nextLineId.current,
+        menuItemId: menuItems[0]!.slug,
+        quantity: 1,
+      },
+    ]);
+    nextLineId.current += 1;
+  };
+
+  const handleRemoveLine = (lineId: number) => {
+    setLines((previous) => {
+      if (previous.length <= 1) {
+        return previous;
+      }
+      return previous.filter((line) => line.id !== lineId);
+    });
+  };
+
+  const handleMenuItemChange = (lineId: number, menuItemId: string) => {
+    setLines((previous) =>
+      previous.map((line) => (line.id === lineId ? { ...line, menuItemId } : line)),
+    );
+  };
+
+  const handleQuantityChange = (lineId: number, nextQuantity: number) => {
+    const sanitized = Number.isNaN(nextQuantity) ? 1 : Math.max(1, Math.min(10, nextQuantity));
+    setLines((previous) =>
+      previous.map((line) => (line.id === lineId ? { ...line, quantity: sanitized } : line)),
+    );
+  };
 
   return (
     <Card className="border-border/70 bg-card/95">
@@ -113,33 +210,64 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
             </Select>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="grid gap-2">
-              <Label htmlFor="menuItem">Menu item</Label>
-              <Select
-                id="menuItem"
-                name="menuItem"
-                value={selectedItemSlug}
-                onChange={(event) => setSelectedItemSlug(event.target.value)}
-              >
-                {menuItems.map((item) => (
-                  <option key={item.slug} value={item.slug}>
-                    {item.name} — {currencyFormatter.format(item.price)}
-                  </option>
-                ))}
-              </Select>
+          <div className="grid gap-4">
+            <div className="flex items-center justify-between">
+              <Label>Order items</Label>
+              <Button type="button" variant="outline" size="sm" onClick={handleAddLine} disabled={menuItems.length === 0}>
+                Add menu item
+              </Button>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="quantity">Quantity</Label>
-              <Input
-                id="quantity"
-                name="quantity"
-                type="number"
-                min={1}
-                max={10}
-                value={quantity}
-                onChange={(event) => setQuantity(Number.parseInt(event.target.value, 10) || 1)}
-              />
+            <div className="grid gap-3">
+              {lines.length === 0 ? (
+                <p className="rounded-2xl border border-dashed border-border/70 bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
+                  No menu items available right now.
+                </p>
+              ) : null}
+              {lines.map((line, index) => (
+                <div
+                  key={line.id}
+                  className="grid gap-3 rounded-2xl border border-border/70 bg-background/60 p-4 md:grid-cols-[minmax(0,1fr)_120px_auto] md:items-end"
+                >
+                  <div className="grid gap-2">
+                    <Label htmlFor={`menuItem-${line.id}`}>Menu item {lines.length > 1 ? index + 1 : ""}</Label>
+                    <Select
+                      id={`menuItem-${line.id}`}
+                      value={line.menuItemId}
+                      onChange={(event) => handleMenuItemChange(line.id, event.target.value)}
+                    >
+                      {menuItems.map((item) => (
+                        <option key={item.slug} value={item.slug}>
+                          {item.name} — {currencyFormatter.format(item.price)}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor={`quantity-${line.id}`}>Quantity</Label>
+                    <Input
+                      id={`quantity-${line.id}`}
+                      type="number"
+                      min={1}
+                      max={10}
+                      value={line.quantity}
+                      onChange={(event) =>
+                        handleQuantityChange(line.id, Number.parseInt(event.target.value, 10) || 1)
+                      }
+                    />
+                  </div>
+                  <div className="flex items-end justify-end">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleRemoveLine(line.id)}
+                      disabled={lines.length <= 1}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
