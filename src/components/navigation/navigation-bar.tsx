@@ -73,6 +73,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             {primary.map((link) => {
               const active = isActivePath(pathname ?? "/", link.href);
               const emphasize = link.label.toLowerCase() === "reserve";
+              const variant = active ? "default" : emphasize ? "outline" : "ghost";
 
               return (
                 <Link
@@ -81,12 +82,14 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                   aria-current={active ? "page" : undefined}
                   className={cn(
                     buttonClasses({
-                      variant: active || emphasize ? "default" : "ghost",
+                      variant,
                       size: "sm",
                     }),
                     "h-10 rounded-full px-5",
                     active && "ring-2 ring-primary/30",
                     !active && !emphasize && "text-muted-foreground hover:text-foreground",
+                    emphasize && !active &&
+                      "border-primary/40 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary",
                   )}
                 >
                   <span>{link.label}</span>
