@@ -1,25 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: 42 47% 97%;
-  --foreground: 24 14% 12%;
-  --muted: 36 41% 92%;
-  --muted-foreground: 25 11% 36%;
+  --background: 34 64% 98%;
+  --foreground: 24 22% 14%;
+  --muted: 32 48% 94%;
+  --muted-foreground: 26 18% 36%;
   --card: 0 0% 100%;
-  --card-foreground: 24 14% 12%;
+  --card-foreground: 24 22% 14%;
   --popover: 0 0% 100%;
-  --popover-foreground: 24 14% 12%;
-  --border: 30 24% 88%;
-  --input: 30 24% 88%;
-  --primary: 26 96% 47%;
-  --primary-foreground: 45 100% 98%;
-  --secondary: 35 70% 94%;
-  --secondary-foreground: 24 16% 28%;
-  --accent: 189 75% 43%;
-  --accent-foreground: 195 100% 97%;
+  --popover-foreground: 24 22% 14%;
+  --border: 30 44% 90%;
+  --input: 30 44% 90%;
+  --primary: 26 96% 54%;
+  --primary-foreground: 38 100% 98%;
+  --secondary: 32 92% 96%;
+  --secondary-foreground: 23 32% 28%;
+  --accent: 22 90% 60%;
+  --accent-foreground: 36 100% 98%;
   --destructive: 4 88% 58%;
-  --destructive-foreground: 0 0% 98%;
-  --ring: 26 96% 47%;
+  --destructive-foreground: 0 0% 100%;
+  --ring: 26 96% 54%;
   --radius-xs: 0.75rem;
   --radius-sm: 1.1rem;
   --radius: 1.5rem;
@@ -27,25 +27,25 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: 30 20% 6%;
-    --foreground: 35 35% 96%;
-    --muted: 28 21% 16%;
-    --muted-foreground: 36 17% 70%;
-    --card: 28 18% 12%;
-    --card-foreground: 35 35% 96%;
-    --popover: 28 18% 12%;
-    --popover-foreground: 35 35% 96%;
-    --border: 28 18% 18%;
-    --input: 28 18% 18%;
-    --primary: 30 92% 63%;
-    --primary-foreground: 28 22% 8%;
-    --secondary: 22 26% 21%;
-    --secondary-foreground: 36 24% 88%;
-    --accent: 194 84% 62%;
-    --accent-foreground: 209 100% 12%;
-    --destructive: 0 86% 67%;
-    --destructive-foreground: 24 12% 10%;
-    --ring: 30 92% 63%;
+    --background: 24 34% 8%;
+    --foreground: 34 44% 94%;
+    --muted: 26 32% 18%;
+    --muted-foreground: 33 22% 76%;
+    --card: 26 28% 12%;
+    --card-foreground: 34 44% 94%;
+    --popover: 26 28% 12%;
+    --popover-foreground: 34 44% 94%;
+    --border: 26 26% 22%;
+    --input: 26 26% 22%;
+    --primary: 26 92% 62%;
+    --primary-foreground: 42 100% 97%;
+    --secondary: 24 30% 20%;
+    --secondary-foreground: 34 64% 92%;
+    --accent: 22 82% 58%;
+    --accent-foreground: 40 100% 96%;
+    --destructive: 0 86% 60%;
+    --destructive-foreground: 20 24% 8%;
+    --ring: 26 92% 62%;
   }
 }
 

@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 type BadgeVariant = "default" | "outline" | "subtle";
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: "bg-primary/15 text-primary ring-1 ring-primary/20",
-  outline: "border border-border text-muted-foreground",
-  subtle: "bg-muted text-muted-foreground",
+  default: "bg-primary/15 text-primary ring-1 ring-primary/30",
+  outline: "border border-primary/30 text-primary",
+  subtle: "bg-secondary text-secondary-foreground",
 };
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {

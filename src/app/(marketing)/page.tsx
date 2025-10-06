@@ -70,7 +70,7 @@ function HeroSection() {
             ))}
           </dl>
         </div>
-        <Card className="flex-1 border-white/70 bg-white/80 shadow-xl backdrop-blur">
+        <Card className="flex-1 border-primary/15 bg-white/90 shadow-xl shadow-primary/15 backdrop-blur">
           <CardHeader className="p-8 pb-4">
             <Badge variant="outline" className="border-primary/40 text-primary">
               Chef&apos;s note
@@ -122,7 +122,7 @@ async function PromotionsSection() {
       </header>
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {promotions.slice(0, 3).map((promotion) => (
-          <Card key={promotion.id} className="border-border/70 bg-card/90">
+          <Card key={promotion.id} className="border-primary/15 bg-white/95">
             <CardHeader className="pb-4">
               <Badge variant="outline" className="border-primary/30 text-xs text-primary">
                 {promotion.audience === "CATERING" ? "Catering" : "Signature experience"}
@@ -140,7 +140,7 @@ async function PromotionsSection() {
               </CardContent>
             ) : null}
             {promotion.ctaUrl ? (
-              <CardFooter className="bg-muted/40">
+              <CardFooter className="bg-primary/5">
                 <Link href={promotion.ctaUrl} className={cn(buttonClasses({ variant: "link" }), "text-primary")}>
                   {promotion.ctaLabel ?? "Reserve now"}
                 </Link>
@@ -177,7 +177,7 @@ async function LocationsSection() {
       </header>
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
         {locations.map((location) => (
-          <Card key={location.id} className="border-border/70 bg-card/95">
+          <Card key={location.id} className="border-primary/15 bg-white/95">
             <CardHeader className="pb-4">
               <CardTitle className="text-2xl">{location.name}</CardTitle>
               <CardDescription>
@@ -191,17 +191,17 @@ async function LocationsSection() {
                 <p className="font-medium text-foreground">Dining style</p>
                 <p>Chef-led tasting menus with vegetarian pairings available.</p>
               </div>
-              <Separator className="bg-border/60" />
+              <Separator className="bg-primary/15" />
               <div>
                 <p className="font-medium text-foreground">Today&apos;s service</p>
                 <p>Open from 12:00 – 22:00 with walk-in lounge from 16:00.</p>
               </div>
             </CardContent>
-            <CardFooter className="bg-muted/30">
+            <CardFooter className="bg-primary/5">
               <Link href={`/locations/${location.slug}`} className={cn(buttonClasses({ variant: "link" }), "text-primary")}>
                 View details
               </Link>
-              <Button variant="ghost" size="sm" className="text-xs text-muted-foreground hover:text-foreground">
+              <Button variant="ghost" size="sm" className="text-xs text-primary/80 hover:text-primary">
                 Map &amp; directions
               </Button>
             </CardFooter>
@@ -230,8 +230,8 @@ function CraftSection() {
 
   return (
     <section className="mx-auto max-w-6xl px-6 pb-20">
-      <div className="relative overflow-hidden rounded-[2.5rem] border border-border/70 bg-gradient-to-r from-secondary/60 via-background to-background p-[1px] shadow-xl">
-        <div className="rounded-[2.45rem] bg-white/80 px-8 py-16 backdrop-blur md:px-14">
+      <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/15 bg-gradient-to-r from-primary/20 via-white to-white p-[1px] shadow-[0_26px_70px_rgba(255,125,0,0.16)]">
+        <div className="rounded-[2.45rem] bg-white/85 px-8 py-16 backdrop-blur md:px-14">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="subtle" className="mx-auto mb-4 w-fit bg-accent/10 text-accent">
               The Kiisi craft
@@ -247,9 +247,9 @@ function CraftSection() {
             {items.map((item) => (
               <div
                 key={item.title}
-                className="rounded-3xl border border-border/60 bg-white/70 p-6 text-left shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-md"
+                className="rounded-3xl border border-primary/15 bg-white/80 p-6 text-left shadow-sm backdrop-blur transition hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(255,125,0,0.18)]"
               >
-                <div className="mb-4 h-12 w-12 rounded-2xl bg-primary/10" />
+                <div className="mb-4 h-12 w-12 rounded-2xl bg-primary/15" />
                 <h3 className="text-xl font-semibold text-foreground">{item.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
               </div>

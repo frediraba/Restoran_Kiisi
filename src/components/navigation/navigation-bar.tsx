@@ -50,15 +50,15 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 border-b border-primary/10 bg-white/90 shadow-[0_8px_24px_rgba(255,125,0,0.08)] backdrop-blur supports-[backdrop-filter]:bg-white/80">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
           aria-hidden
         />
         <div className="relative mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-4 px-6">
           <Link
             href="/"
-            className="group inline-flex items-center gap-4 rounded-full border border-transparent bg-background/40 px-3 py-1 transition hover:border-border/70 hover:bg-background/70"
+            className="group inline-flex items-center gap-4 rounded-full border border-primary/10 bg-white/70 px-3 py-1 shadow-[0_6px_20px_rgba(255,125,0,0.12)] transition hover:border-primary/20 hover:bg-white"
           >
             <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 text-sm font-black uppercase tracking-[0.35em] text-primary-foreground shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-transform group-hover:scale-105">
               <span className="absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
@@ -84,10 +84,10 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                       variant,
                       size: "sm",
                     }),
-                    "h-10 rounded-full px-5 ring-1 ring-border/60",
+                    "h-10 rounded-full px-5 shadow-sm",
                     active
-                      ? "ring-2 ring-primary/30"
-                      : "border-primary/50 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary",
+                      ? "shadow-[0_12px_30px_rgba(255,125,0,0.28)]"
+                      : "border border-primary/40 bg-white/80 text-primary hover:border-primary/60 hover:bg-primary/10",
                   )}
                 >
                   <span>{link.label}</span>
@@ -98,7 +98,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
           </nav>
 
           <div className="hidden items-center gap-3 lg:flex">
-            <Separator orientation="vertical" className="h-6" />
+            <Separator orientation="vertical" className="h-6 bg-primary/20" />
             <nav aria-label="Secondary" className="flex items-center gap-2 text-xs">
               {secondary.map((link) => {
                 const active = isActivePath(pathname ?? "/", link.href);
@@ -109,7 +109,9 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                     aria-current={active ? "page" : undefined}
                     className={cn(
                       "rounded-full px-2.5 py-1.5 transition",
-                      active ? "bg-muted text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+                      active
+                        ? "bg-primary/10 text-primary shadow-sm"
+                        : "text-muted-foreground hover:text-primary",
                     )}
                   >
                     {link.label}
@@ -123,7 +125,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             type="button"
             variant="ghost"
             size="icon"
-            className="relative h-10 w-10 md:hidden"
+            className="relative h-10 w-10 rounded-2xl border border-primary/20 bg-white/80 text-primary shadow-sm md:hidden"
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             onClick={() => setMobileOpen((value) => !value)}
@@ -151,7 +153,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
         </div>
 
         {mobileOpen ? (
-          <div className="border-t border-border/60 bg-background/95 shadow-lg md:hidden" role="dialog" aria-modal>
+          <div className="border-t border-primary/15 bg-white/95 shadow-[0_20px_40px_rgba(255,125,0,0.12)] md:hidden" role="dialog" aria-modal>
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-6">
               <div className="grid gap-2">
                 {primary.map((link) => {
@@ -163,12 +165,12 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                       href={link.href}
                       aria-current={active ? "page" : undefined}
                       className={cn(
-                        "flex items-center justify-between rounded-2xl border border-border/60 px-4 py-3 text-sm font-semibold transition",
+                        "flex items-center justify-between rounded-2xl border border-transparent px-4 py-3 text-sm font-semibold transition",
                         active
-                          ? "bg-primary text-primary-foreground shadow-sm"
+                          ? "bg-primary text-primary-foreground shadow-[0_12px_30px_rgba(255,125,0,0.24)]"
                           : emphasize
-                            ? "bg-primary/10 text-primary hover:bg-primary/20"
-                            : "bg-muted/40 text-foreground hover:bg-muted",
+                            ? "border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
+                            : "border-primary/10 bg-white/70 text-foreground hover:border-primary/30 hover:bg-primary/10",
                       )}
                     >
                       <span>{link.label}</span>
@@ -181,10 +183,10 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
               {secondary.length ? (
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    <span className="text-xs font-semibold uppercase tracking-[0.12em] text-primary/70">
                       Discover
                     </span>
-                    <Separator className="flex-1" />
+                    <Separator className="flex-1 bg-primary/20" />
                   </div>
                   <div className="grid gap-2">
                     {secondary.map((link) => {
@@ -197,8 +199,8 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                           className={cn(
                             "rounded-2xl px-4 py-3 text-sm font-medium transition",
                             active
-                              ? "bg-muted text-foreground"
-                              : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                              ? "bg-primary/10 text-primary"
+                              : "text-muted-foreground hover:bg-primary/10 hover:text-primary",
                           )}
                         >
                           {link.label}
@@ -217,7 +219,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
       {mobile.length ? (
         <nav
           aria-label="Mobile navigation"
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-background/95 pb-[env(safe-area-inset-bottom)] pb-2 pt-1 shadow-[0_-6px_18px_rgba(15,23,42,0.08)] backdrop-blur md:hidden"
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-primary/20 bg-white/95 pb-[env(safe-area-inset-bottom)] pb-2 pt-1 shadow-[0_-8px_24px_rgba(255,125,0,0.12)] backdrop-blur md:hidden"
         >
           <div className="mx-auto flex max-w-6xl items-stretch justify-between px-2 py-1">
             {mobile.map((link) => {
@@ -230,8 +232,8 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                   className={cn(
                     "flex flex-1 flex-col items-center gap-1 rounded-2xl px-3 py-2 text-xs font-medium transition",
                     active
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground",
+                      ? "bg-primary/15 text-primary"
+                      : "text-muted-foreground hover:text-primary",
                   )}
                 >
                   <span>{link.label}</span>
@@ -243,7 +245,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                   <span
                     className={cn(
                       "mt-1 h-1 w-8 rounded-full transition",
-                      active ? "bg-primary" : "bg-transparent",
+                      active ? "bg-primary" : "bg-primary/10",
                     )}
                     aria-hidden
                   />
