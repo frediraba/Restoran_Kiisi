@@ -31,6 +31,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Duplicate `.env.example` and supply production credentials for PlanetScale and NextAuth secrets.
+2. Connect the repository to [Vercel](https://vercel.com/import) and import the project using the default Next.js build command (`npm run build`).
+3. Add the environment variables from your `.env` file to the Vercel project.
+4. Run `npx prisma migrate deploy --schema=prisma/schema.prisma` against the production database before the first deploy.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The [`docs/deployment/vercel.md`](docs/deployment/vercel.md) guide walks through the full production setup, including database provisioning, environment variables, and verification steps.
