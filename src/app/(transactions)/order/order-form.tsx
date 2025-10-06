@@ -142,6 +142,7 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
           id="requestedReadyAt"
           type="datetime-local"
           className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          step={1800}
           value={requestedTime}
           onChange={(event) => {
             setRequestedTime(event.target.value);
