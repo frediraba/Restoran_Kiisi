@@ -76,6 +76,7 @@ export function ReservationForm({ locations }: ReservationFormProps) {
           name="requestedTime"
           type="datetime-local"
           data-testid="reservation-datetime"
+          step={1800}
           value={requestedTime}
           onChange={(event) => setRequestedTime(event.target.value)}
           className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
