@@ -9,7 +9,7 @@ export default function TransactionsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50 text-neutral-900">
+    <div className="flex min-h-screen flex-col bg-neutral-50 pb-24 text-neutral-900 md:pb-0">
       <Suspense fallback={<SkeletonHeader />}>
         <SiteHeader />
       </Suspense>
