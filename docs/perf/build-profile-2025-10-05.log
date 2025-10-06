@@ -1,0 +1,63 @@
+
+> 3@0.1.0 build
+> next build --turbopack --profile
+
+node.exe :  ÔÜá Profiling is enabled. Note: This may affect performance.
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Users\fredi\AppData\Roaming\ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ( ÔÜá Profiling ...ct performance.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+   Ôû¦ Next.js 15.5.4 (Turbopack)
+   - Environments: .env
+
+   Creating an optimized production build ...
+ Ô£ô Finished writing to disk in 217ms
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./src/lib/observability/slo.ts:1:1
+Export metrics doesn't exist in target module
+> 1 | ´++import { metrics } from "@vercel/otel";
+    | ^^^^^
+[1m^^^^^^[1
+m^^^^^^^
+^^^^^^[
+22m^^^^^^[22
+m^^^^^^
+[39m^^^
+  2 |
+  3 | const meter = metrics.getMeter("restoran-kiisi");
+  4 |
+
+The export metrics was not found in module [project]/node_modules/@vercel/otel/dist/node/index.js [app-route] 
+(ecmascript).
+Did you mean to import FetchInstrumentation?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the 
+requested export doesn't exist.
+
+
+./src/lib/observability/slo.ts:1:1
+Export metrics doesn't exist in target module
+> 1 | ´++import { metrics } from "@vercel/otel";
+    | ^^^^^
+[1m^^^^^^[1
+m^^^^^^^
+^^^^^^[
+22m^^^^^^[22
+m^^^^^^
+[39m^^^
+  2 |
+  3 | const meter = metrics.getMeter("restoran-kiisi");
+  4 |
+
+The export metrics was not found in module [project]/node_modules/@vercel/otel/dist/node/index.js [app-rsc] (ecmascript).
+Did you mean to import FetchInstrumentation?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the 
+requested export doesn't exist.
+
+
+    at <unknown> (./src/lib/observability/slo.ts:1:1)
+    at <unknown> (./src/lib/observability/slo.ts:1:1)
+

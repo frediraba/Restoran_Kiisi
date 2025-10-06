@@ -1,3 +1,4 @@
+
 # Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
@@ -6,22 +7,22 @@
 ## Execution Flow (/plan command scope)
 ```
 1. Load feature spec from Input path
-   -> If not found: ERROR "No feature spec at {path}"
+   → If not found: ERROR "No feature spec at {path}"
 2. Fill Technical Context (scan for NEEDS CLARIFICATION)
-   -> Detect project type from repository structure (single/web/mobile)
-   -> Set Structure Decision based on project type
-3. Populate the Constitution Check section using the current constitution
-4. Evaluate Constitution Check
-   -> If violations exist: Document in Complexity Tracking
-   -> If no justification possible: ERROR "Simplify approach first"
-   -> Update Progress Tracking: Initial Constitution Check
-5. Execute Phase 0 -> produce research.md
-   -> If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
-6. Execute Phase 1 -> produce contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md`, `.github/copilot-instructions.md`, `GEMINI.md`, `QWEN.md`, or `AGENTS.md`)
-7. Re-evaluate Constitution Check
-   -> If new violations: Refactor design, return to Phase 1
-   -> Update Progress Tracking: Post-Design Constitution Check
-8. Plan Phase 2 -> describe task generation approach (DO NOT create tasks.md)
+   → Detect Project Type from file system structure or context (web=frontend+backend, mobile=app+api)
+   → Set Structure Decision based on project type
+3. Fill the Constitution Check section based on the content of the constitution document.
+4. Evaluate Constitution Check section below
+   → If violations exist: Document in Complexity Tracking
+   → If no justification possible: ERROR "Simplify approach first"
+   → Update Progress Tracking: Initial Constitution Check
+5. Execute Phase 0 → research.md
+   → If NEEDS CLARIFICATION remain: ERROR "Resolve unknowns"
+6. Execute Phase 1 → contracts, data-model.md, quickstart.md, agent-specific template file (e.g., `CLAUDE.md` for Claude Code, `.github/copilot-instructions.md` for GitHub Copilot, `GEMINI.md` for Gemini CLI, `QWEN.md` for Qwen Code, or `AGENTS.md` for all other agents).
+7. Re-evaluate Constitution Check section
+   → If new violations: Refactor design, return to Phase 1
+   → Update Progress Tracking: Post-Design Constitution Check
+8. Plan Phase 2 → Describe task generation approach (DO NOT create tasks.md)
 9. STOP - Ready for /tasks command
 ```
 
@@ -33,87 +34,85 @@
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
-**Language/Version**: [e.g., TypeScript 5.x, Node.js 20, NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., Next.js 15.5, React 19, Tailwind 4 or NEEDS CLARIFICATION]  
-**Storage**: [e.g., PlanetScale, Supabase, filesystem, or N/A]  
-**Testing**: [e.g., next/test, Playwright, Vitest or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Vercel Edge, Node server, browser targets or NEEDS CLARIFICATION]  
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., TTFB <=200ms, LCP <=2.5s, FID <=50ms or NEEDS CLARIFICATION]  
-**Constraints**: [e.g., p95 latency, memory caps, offline support or NEEDS CLARIFICATION]  
-**Scale/Scope**: [e.g., daily active users, routes affected, release cadence or NEEDS CLARIFICATION]  
-**Rendering Intent**: [per route: static, dynamic, partial prerendering, edge or NEEDS CLARIFICATION]  
-**Caching Strategy**: [revalidation windows, tag usage, invalidation plan or NEEDS CLARIFICATION]  
-**Performance Budgets**: [TTFB, LCP, RUM metrics or NEEDS CLARIFICATION]  
-**Edge & Observability**: [edge runtime usage, instrumentation.ts hooks, fallback UX or NEEDS CLARIFICATION]
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- App Router + Server Components plan confirmed; legacy Pages Router usage recorded with waiver.
-- Data fetching uses Server Actions or route handlers with caching metadata and invalidation tags documented.
-- Rendering intent, Partial Prerendering usage, and stated budgets align with performance targets.
-- Edge runtime coverage, instrumentation.ts hooks, and error/not-found fallbacks are defined.
-- Automated tests cover server actions, routing, and streaming fallbacks before implementation.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 ```
 specs/[###-feature]/
-|-- plan.md              # This file (/plan command output)
-|-- research.md          # Phase 0 output (/plan command)
-|-- data-model.md        # Phase 1 output (/plan command)
-|-- quickstart.md        # Phase 1 output (/plan command)
-|-- contracts/           # Phase 1 output (/plan command)
-|-- tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
+├── plan.md              # This file (/plan command output)
+├── research.md          # Phase 0 output (/plan command)
+├── data-model.md        # Phase 1 output (/plan command)
+├── quickstart.md        # Phase 1 output (/plan command)
+├── contracts/           # Phase 1 output (/plan command)
+└── tasks.md             # Phase 2 output (/tasks command - NOT created by /plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 ```
-# Option 1: Single project (DEFAULT)
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-|-- app/
-|   |-- [feature]/
-|       |-- page.tsx
-|       |-- layout.tsx
-|       |-- loading.tsx
-|       |-- error.tsx
-|-- lib/
-|-- components/
+├── models/
+├── services/
+├── cli/
+└── lib/
 
 tests/
-|-- contract/
-|-- integration/
-|-- components/
-|-- performance/
+├── contract/
+├── integration/
+└── unit/
 
-# Option 2: Web application (frontend + backend)
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
 backend/
-|-- src/
-|-- tests/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
 
 frontend/
-|-- src/
-|-- tests/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
 
-# Option 3: Mobile + API
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
 api/
-|-- src/
-|-- tests/
+└── [same as backend above]
 
-mobile/ (ios/ or android/)
-|-- src/
-|-- tests/
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real directories captured above]
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Phase 0: Outline & Research
 1. **Extract unknowns from Technical Context** above:
-   - For each NEEDS CLARIFICATION -> create research task
-   - For each dependency -> gather best practices
-   - For each integration -> document patterns and risks
+   - For each NEEDS CLARIFICATION → research task
+   - For each dependency → best practices task
+   - For each integration → patterns task
 
 2. **Generate and dispatch research agents**:
    ```
@@ -133,23 +132,23 @@ mobile/ (ios/ or android/)
 ## Phase 1: Design & Contracts
 *Prerequisites: research.md complete*
 
-1. **Extract entities from feature spec** -> `data-model.md`:
+1. **Extract entities from feature spec** → `data-model.md`:
    - Entity name, fields, relationships
    - Validation rules from requirements
    - State transitions if applicable
 
-2. **Generate API contracts or server action interfaces** from functional requirements:
-   - For each user action -> endpoint or server action definition
-   - Capture input/output schemas, caching tags, and revalidation expectations
-   - Output OpenAPI definitions or TypeScript interfaces to `/contracts/`
+2. **Generate API contracts** from functional requirements:
+   - For each user action → endpoint
+   - Use standard REST/GraphQL patterns
+   - Output OpenAPI/GraphQL schema to `/contracts/`
 
 3. **Generate contract tests** from contracts:
-   - One test file per endpoint/server action
-   - Assert request/response schemas and cache metadata
+   - One test file per endpoint
+   - Assert request/response schemas
    - Tests must fail (no implementation yet)
 
 4. **Extract test scenarios** from user stories:
-   - Each story -> integration test scenario
+   - Each story → integration test scenario
    - Quickstart test = story validation steps
 
 5. **Update agent file incrementally** (O(1) operation):
@@ -169,11 +168,10 @@ mobile/ (ios/ or android/)
 **Task Generation Strategy**:
 - Load `.specify/templates/tasks-template.md` as base
 - Generate tasks from Phase 1 design docs (contracts, data model, quickstart)
-- Each contract/server action -> contract test task [P]
-- Each entity -> model creation or data-mapping task [P]
-- Each user story -> integration test task
+- Each contract → contract test task [P]
+- Each entity → model creation task [P] 
+- Each user story → integration test task
 - Implementation tasks to make tests pass
-- Guardrail tasks: rendering intent, caching tags, performance budgets, observability
 
 **Ordering Strategy**:
 - TDD order: Tests before implementation 
@@ -196,8 +194,9 @@ mobile/ (ios/ or android/)
 
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., client-side data fetch] | [current need] | [why server action insufficient] |
-| [e.g., bypassing Suspense] | [specific problem] | [why standard pattern insufficient] |
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+
 
 ## Progress Tracking
 *This checklist is updated during execution flow*
@@ -217,4 +216,4 @@ mobile/ (ios/ or android/)
 - [ ] Complexity deviations documented
 
 ---
-*Based on Constitution v1.0.0 - See `/memory/constitution.md`*
+*Based on Constitution v2.1.1 - See `/memory/constitution.md`*

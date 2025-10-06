@@ -1,0 +1,280 @@
+// Prisma schema for Restoran Kiisi web experience
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "mysql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+enum SpiceLevel {
+  MILD
+  MEDIUM
+  HOT
+}
+
+enum PromotionAudience {
+  PUBLIC
+  CATERING
+  LOYALTY
+}
+
+enum ServiceType {
+  PICKUP
+  DINE_IN
+}
+
+enum OrderStatus {
+  PENDING
+  SUBMITTED
+  READY
+  CANCELLED
+}
+
+enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  WAITLISTED
+  CANCELLED
+}
+
+enum PaymentMode {
+  PAY_ON_SITE
+  INVOICE_EMAIL
+}
+
+enum NavigationLinkType {
+  PRIMARY
+  SECONDARY
+  MOBILE
+}
+
+model MenuCategory {
+  id             String                  @id @default(cuid())
+  slug           String                  @unique
+  name           String
+  description    String?
+  displayOrder   Int                     @default(0)
+  isSeasonal     Boolean                 @default(false)
+  imageUrl       String?
+  updatedAt      DateTime                @updatedAt
+
+  menuItems      MenuItem[]
+  promotions     PromotionOnCategory[]
+  locationLinks  LocationMenuCategory[]
+
+  @@index([displayOrder])
+}
+
+model MenuItem {
+  id                String               @id @default(cuid())
+  slug              String               @unique
+  categoryId        String
+  name              String
+  description       String?
+  price             Decimal              @db.Decimal(10, 2)
+  dietaryTags       Json?
+  isAvailable       Boolean              @default(true)
+  heroImageUrl      String?
+  locationOverrides Json?
+  spiceLevel        SpiceLevel?
+  updatedAt         DateTime             @updatedAt
+
+  category          MenuCategory         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  promotions        PromotionOnItem[]
+  locationLinks     LocationMenuItem[]
+
+  @@index([categoryId])
+}
+
+model Promotion {
+  id        String                 @id @default(cuid())
+  code      String?                @unique
+  title     String
+  subtitle  String?
+  body      String?
+  startAt   DateTime
+  endAt     DateTime
+  audience  PromotionAudience      @default(PUBLIC)
+  ctaLabel  String?
+  ctaUrl    String?
+  isActive  Boolean                @default(false)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+
+  categories PromotionOnCategory[]
+  menuItems  PromotionOnItem[]
+}
+
+model PromotionOnCategory {
+  promotionId    String
+  menuCategoryId String
+
+  promotion      Promotion    @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  menuCategory   MenuCategory @relation(fields: [menuCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([promotionId, menuCategoryId])
+}
+
+model PromotionOnItem {
+  promotionId String
+  menuItemId  String
+
+  promotion   Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  menuItem    MenuItem  @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@id([promotionId, menuItemId])
+}
+
+model NavigationLink {
+  id        String              @id @default(cuid())
+  label     String
+  type      NavigationLinkType
+  href      String
+  icon      String?
+  badge     String?
+  priority  Int                 @default(0)
+  isActive  Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model RestaurantLocation {
+  id                   String                   @id @default(cuid())
+  slug                 String                   @unique
+  name                 String
+  address              Json
+  phone                String?
+  email                String?
+  mapEmbedId           String?
+  amenities            Json?
+  preferredRegion      String?
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+
+  menuItemLinks        LocationMenuItem[]
+  menuCategoryLinks    LocationMenuCategory[]
+  hours                LocationHours[]
+  reservationPolicy    ReservationPolicy?
+  orderSessions        OrderSession[]
+  reservationRequests  ReservationRequest[]
+  preferredGuests      GuestProfile[]           @relation("PreferredLocation")
+}
+
+model LocationHours {
+  id          String    @id @default(cuid())
+  locationId  String
+  dayOfWeek   Int
+  openTime    DateTime  @db.Time
+  closeTime   DateTime  @db.Time
+  isClosed    Boolean   @default(false)
+  specialDate DateTime?
+  message     String?
+  createdAt   DateTime  @default(now())
+
+  location    RestaurantLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@index([locationId, dayOfWeek])
+}
+
+model ReservationPolicy {
+  id                     String               @id @default(cuid())
+  locationId             String               @unique
+  maxPartySize           Int
+  minPartySize           Int                  @default(1)
+  bookingIntervalMinutes Int
+  bufferMinutes          Int                  @default(0)
+  waitlistEnabled        Boolean              @default(false)
+  createdAt              DateTime             @default(now())
+
+  location               RestaurantLocation   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+}
+
+model OrderSession {
+  id                  String          @id @default(cuid())
+  status              OrderStatus     @default(PENDING)
+  serviceType         ServiceType     @default(PICKUP)
+  locationId          String
+  guestProfileId      String?
+  cartItems           Json
+  subtotal            Decimal         @db.Decimal(10, 2)
+  tax                 Decimal         @db.Decimal(10, 2)
+  total               Decimal         @db.Decimal(10, 2)
+  paymentMode         PaymentMode     @default(PAY_ON_SITE)
+  invoiceEmailSentAt  DateTime?
+  requestedReadyAt    DateTime?
+  specialInstructions String?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  location            RestaurantLocation @relation(fields: [locationId], references: [id])
+  guestProfile        GuestProfile?      @relation(fields: [guestProfileId], references: [id])
+
+  @@index([locationId])
+  @@index([guestProfileId])
+}
+
+model ReservationRequest {
+  id                  String            @id @default(cuid())
+  status              ReservationStatus @default(PENDING)
+  partySize           Int
+  requestedAt         DateTime
+  confirmedAt         DateTime?
+  locationId          String
+  guestProfileId      String?
+  contactName         String
+  contactEmail        String
+  contactPhone        String?
+  notes               String?
+  nearestAlternatives Json?
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+
+  location            RestaurantLocation @relation(fields: [locationId], references: [id])
+  guestProfile        GuestProfile?      @relation(fields: [guestProfileId], references: [id])
+
+  @@index([locationId])
+  @@index([guestProfileId])
+}
+
+model GuestProfile {
+  id                  String              @id @default(cuid())
+  email               String              @unique
+  passwordHash        String
+  firstName           String?
+  lastName            String?
+  phone               String?
+  loyaltyId           String?
+  defaultLocationId   String?
+  marketingOptIn      Boolean             @default(false)
+  lastLoginAt         DateTime?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  defaultLocation     RestaurantLocation? @relation("PreferredLocation", fields: [defaultLocationId], references: [id])
+  orderSessions       OrderSession[]
+  reservationRequests ReservationRequest[]
+}
+
+model LocationMenuCategory {
+  locationId     String
+  menuCategoryId String
+
+  location       RestaurantLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  menuCategory   MenuCategory      @relation(fields: [menuCategoryId], references: [id], onDelete: Cascade)
+
+  @@id([locationId, menuCategoryId])
+}
+
+model LocationMenuItem {
+  locationId String
+  menuItemId String
+
+  location   RestaurantLocation @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  menuItem   MenuItem           @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+
+  @@id([locationId, menuItemId])
+}

@@ -1,64 +1,50 @@
-<!--
-Sync Impact Report:
-- Version change: n/a -> 1.0.0
-- Modified principles: n/a (initial set)
-- Added sections: Core Principles, Framework Guardrails, Delivery Workflow, Governance
-- Removed sections: none
-- Templates requiring updates (updated/pending):
-  - updated .specify/templates/plan-template.md
-- Follow-up TODOs: none
--->
-
-# Next.js 15 Starter Constitution
+# [PROJECT_NAME] Constitution
+<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
 
 ## Core Principles
 
-### App Router First Delivery
-- MUST build all user-facing routes with the Next.js App Router; introducing the legacy Pages Router requires governance approval.
-- MUST default to React Server Components; mark Client Components only when browser-only APIs or shared mutable state demand it, and confine them to leaf segments.
-- MUST define layout.tsx, loading.tsx, template.tsx, and error.tsx per route segment so streaming is the default and shared UI is centralized.
-Rationale: Aligns the project with Next.js 15's server-centric pipeline, shrinking bundles and giving the framework maximum control over caching and streaming.
+### [PRINCIPLE_1_NAME]
+<!-- Example: I. Library-First -->
+[PRINCIPLE_1_DESCRIPTION]
+<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
 
-### Server Actions Own Mutations
-- MUST implement data mutations with scoped Server Actions (or route handlers when integration protocols demand) to guarantee server-only execution, type safety, and CSRF protection.
-- MUST colocate data fetching at the route, layout, or loader boundary and configure caching via fetch options (cache, revalidate, next) with tag-based revalidation for downstream invalidation plans.
-- MUST model loading and optimistic states with Suspense boundaries and transitions rather than imperative client fetches.
-Rationale: Keeps data flow predictable, leverages Next.js 15 cache primitives, and prevents client drift.
+### [PRINCIPLE_2_NAME]
+<!-- Example: II. CLI Interface -->
+[PRINCIPLE_2_DESCRIPTION]
+<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
 
-### Measured Rendering & Caching Budgets
-- MUST declare rendering intent (dynamic, revalidate, preferredRegion, runtime) for every route and record it in the plan so performance budgets are reviewable.
-- MUST apply Partial Prerendering for hybrid routes when static data exists, using loading.tsx/Suspense to keep the shell interactive within 100ms and enforce TTFB <=200ms and LCP <=2.5s for critical paths.
-- MUST profile next build --turbopack --profile during CI; regressions over 10% require remediation before release.
-Rationale: Makes performance measurable and enforces proactive cache and rendering choices.
+### [PRINCIPLE_3_NAME]
+<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
+[PRINCIPLE_3_DESCRIPTION]
+<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
 
-### Edge Observability & Resilience
-- SHOULD prefer the Edge Runtime for latency-sensitive handlers and document preferredRegion/fallback regions for each route.
-- MUST provide instrumentation.ts tracing for critical flows, emit structured logs, and surface metrics to the observability stack before shipping.
-- MUST ship resilient UX by implementing error.tsx, not-found.tsx, and user-friendly fallbacks for failed server actions, logging correlation IDs for triage.
-Rationale: Keeps the application debuggable in distributed environments and limits the blast radius of faults.
+### [PRINCIPLE_4_NAME]
+<!-- Example: IV. Integration Testing -->
+[PRINCIPLE_4_DESCRIPTION]
+<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
 
-### Type-Safe Testing & Automation
-- MUST keep TypeScript strict mode enabled, enforce ESLint/Next linting, and treat lint errors as build blockers.
-- MUST cover Server Actions, routing, and rendering contracts with automated tests (next/test, Playwright, and Testing Library) that run in CI before merge.
-- MUST gate deployments on npm run build and representative smoke tests; untested runtime flags or experiments require feature toggles with rollback plans.
-Rationale: Preserves correctness as the codebase evolves and ensures DX tooling remains trustworthy.
+### [PRINCIPLE_5_NAME]
+<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
+[PRINCIPLE_5_DESCRIPTION]
+<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
 
-## Framework Guardrails
-- Runtime stack is Next.js 15.5 with React 19 and Turbopack; dependency upgrades must document compatibility risks and mitigations.
-- Styling defaults to Tailwind CSS v4 utilities or scoped CSS Modules; new global stylesheets require review and justification.
-- Fonts must use next/font (or a governance-approved alternative) to preserve automatic subsetting and privacy controls.
-- Environment secrets flow through typed runtime configuration (process.env with validation) and never leak to client bundles.
+## [SECTION_2_NAME]
+<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
 
-## Delivery Workflow
-- Every feature begins with the /spec template, explicitly listing rendering intent, caching strategy, and performance budgets derived from this constitution.
-- The /plan output must include an initial and post-design Constitution Check verifying App Router usage, server-component boundaries, and test coverage plans.
-- Implementation follows TDD: commit failing tests for server actions/routes first, then ship features that satisfy lint/build gates and the declared budgets.
-- Any deviation (e.g., client-side data fetching, skipping Suspense) must be documented in plan.md Complexity Tracking with a mitigation timeline.
+[SECTION_2_CONTENT]
+<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+
+## [SECTION_3_NAME]
+<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+
+[SECTION_3_CONTENT]
+<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
 
 ## Governance
-- This constitution supersedes other coding practices; code review must confirm compliance before merge.
-- Amendments require a written RFC, maintainer approval, updates to dependent templates, and version bump rationale recorded in this document.
-- Versioning follows SemVer for governance (MAJOR incompatible rule changes, MINOR new principles/sections, PATCH clarifications); Last Amended reflects the publish date.
-- Compliance is validated at spec/plan review, automated lint/build/test gates, and pre-release checklists; violations block release unless formally waived.
+<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-04 | **Last Amended**: 2025-10-04
+[GOVERNANCE_RULES]
+<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+
+**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->

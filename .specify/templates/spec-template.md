@@ -8,32 +8,29 @@
 ## Execution Flow (main)
 ```
 1. Parse user description from Input
-   -> If empty: ERROR "No feature description provided"
+   → If empty: ERROR "No feature description provided"
 2. Extract key concepts from description
-   -> Identify: actors, actions, data, constraints
-3. Document rendering, caching, and performance guardrails per constitution
-   -> Record intended rendering mode, caching tags, revalidation window, and performance budgets
-   -> If any guardrail unknown: WARN "Guardrails incomplete" and add NEEDS CLARIFICATION
-4. For each unclear aspect:
-   -> Mark with [NEEDS CLARIFICATION: specific question]
-5. Fill User Scenarios & Testing section
-   -> If no clear user flow: ERROR "Cannot determine user scenarios"
-6. Generate Functional Requirements
-   -> Each requirement must be testable
-   -> Mark ambiguous requirements
-7. Identify Key Entities (if data involved)
-8. Run Review Checklist
-   -> If any [NEEDS CLARIFICATION]: WARN "Spec has uncertainties"
-   -> If implementation details found: ERROR "Remove tech details"
-9. Return: SUCCESS (spec ready for planning)
+   → Identify: actors, actions, data, constraints
+3. For each unclear aspect:
+   → Mark with [NEEDS CLARIFICATION: specific question]
+4. Fill User Scenarios & Testing section
+   → If no clear user flow: ERROR "Cannot determine user scenarios"
+5. Generate Functional Requirements
+   → Each requirement must be testable
+   → Mark ambiguous requirements
+6. Identify Key Entities (if data involved)
+7. Run Review Checklist
+   → If any [NEEDS CLARIFICATION]: WARN "Spec has uncertainties"
+   → If implementation details found: ERROR "Remove tech details"
+8. Return: SUCCESS (spec ready for planning)
 ```
 
 ---
 
-## Quick Guidelines
-- Focus on WHAT users need and WHY
-- Avoid HOW to implement (no tech stack, APIs, code structure)
-- Write for business stakeholders, not developers
+## ⚡ Quick Guidelines
+- ✅ Focus on WHAT users need and WHY
+- ❌ Avoid HOW to implement (no tech stack, APIs, code structure)
+- 👥 Written for business stakeholders, not developers
 
 ### Section Requirements
 - **Mandatory sections**: Must be completed for every feature
@@ -67,13 +64,6 @@ When creating this spec from a user prompt:
 ### Edge Cases
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
-
-## Rendering & Performance Guardrails *(mandatory)*
-
-**Rendering Intent**: [route segments, static/dynamic/partial prerendering, streaming notes]
-**Caching Strategy**: [revalidation window, tag usage, invalidation approach]
-**Performance Budgets**: [TTFB, LCP, FID targets aligned with constitution]
-**Edge & Observability**: [edge runtime usage, instrumentation.ts hooks, fallbacks]
 
 ## Requirements *(mandatory)*
 
@@ -109,7 +99,6 @@ When creating this spec from a user prompt:
 - [ ] Success criteria are measurable
 - [ ] Scope is clearly bounded
 - [ ] Dependencies and assumptions identified
-- [ ] Rendering intent, caching strategy, and performance budgets documented
 
 ---
 

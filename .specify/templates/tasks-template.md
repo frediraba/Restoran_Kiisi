@@ -6,32 +6,29 @@
 ## Execution Flow (main)
 ```
 1. Load plan.md from feature directory
-   -> If not found: ERROR "No implementation plan found"
-   -> Extract: tech stack, libraries, structure, rendering/caching guardrails
+   → If not found: ERROR "No implementation plan found"
+   → Extract: tech stack, libraries, structure
 2. Load optional design documents:
-   -> data-model.md: Extract entities -> model tasks
-   -> contracts/: Each file -> contract test task
-   -> research.md: Extract decisions -> setup tasks
+   → data-model.md: Extract entities → model tasks
+   → contracts/: Each file → contract test task
+   → research.md: Extract decisions → setup tasks
 3. Generate tasks by category:
-   -> Setup: project scaffolding, environment, instrumentation.ts updates
-   -> Tests: server action/route handler contracts, component integration, accessibility budgets
-   -> Core: server components, server actions, shared utilities
-   -> Resilience: caching tags, error boundaries, observability wiring
-   -> Polish: performance verification, documentation, cleanup
+   → Setup: project init, dependencies, linting
+   → Tests: contract tests, integration tests
+   → Core: models, services, CLI commands
+   → Integration: DB, middleware, logging
+   → Polish: unit tests, performance, docs
 4. Apply task rules:
-   -> Different files = mark [P] for parallel
-   -> Same file = sequential (no [P])
-   -> Tests before implementation (TDD)
-   -> Document guardrail coverage (rendering intent, caching, performance budgets) in task descriptions
+   → Different files = mark [P] for parallel
+   → Same file = sequential (no [P])
+   → Tests before implementation (TDD)
 5. Number tasks sequentially (T001, T002...)
 6. Generate dependency graph
 7. Create parallel execution examples
 8. Validate task completeness:
-   -> All contracts have tests?
-   -> All entities have models?
-   -> Rendering/caching/observability guardrails translated into tasks?
-   -> All endpoints or server actions implemented?
-   -> Performance budgets have validation tasks?
+   → All contracts have tests?
+   → All entities have models?
+   → All endpoints implemented?
 9. Return: SUCCESS (tasks ready for execution)
 ```
 
@@ -40,86 +37,83 @@
 - Include exact file paths in descriptions
 
 ## Path Conventions
-- Routes/components: `src/app/` (App Router segments, layouts, pages)
-- Shared utilities: `src/lib/`
-- Server actions and route handlers: colocate in segment directories or `src/app/api/`
-- Tests live in `tests/` mirroring feature structure (`tests/contract`, `tests/integration`, `tests/components`)
+- **Single project**: `src/`, `tests/` at repository root
+- **Web app**: `backend/src/`, `frontend/src/`
+- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- Paths shown below assume single project - adjust based on plan.md structure
 
 ## Phase 3.1: Setup
-- [ ] T001 Create feature route segment directory in `src/app/[feature]/`
-- [ ] T002 Scaffold `layout.tsx`, `page.tsx`, and placeholder `loading.tsx`
-- [ ] T003 [P] Register feature-specific tracing in `instrumentation.ts` and document `preferredRegion`
+- [ ] T001 Create project structure per implementation plan
+- [ ] T002 Initialize [language] project with [framework] dependencies
+- [ ] T003 [P] Configure linting and formatting tools
 
-## Phase 3.2: Tests First (TDD) - MUST COMPLETE BEFORE 3.3
+## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-- [ ] T004 [P] Write route handler contract test in `tests/contract/[feature].contract.spec.ts`
-- [ ] T005 [P] Write server action unit test in `tests/actions/[feature].actions.spec.ts`
-- [ ] T006 [P] Write component integration test with `@testing-library/react` in `tests/integration/[feature].render.spec.tsx`
-- [ ] T007 Define performance budget assertions (TTFB, LCP) in `tests/performance/[feature].budget.spec.ts`
+- [ ] T004 [P] Contract test POST /api/users in tests/contract/test_users_post.py
+- [ ] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.py
+- [ ] T006 [P] Integration test user registration in tests/integration/test_registration.py
+- [ ] T007 [P] Integration test auth flow in tests/integration/test_auth.py
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
-- [ ] T008 [P] Implement server action(s) in `src/app/[feature]/actions.ts`
-- [ ] T009 [P] Implement route handler(s) in `src/app/api/[feature]/route.ts`
-- [ ] T010 Build page/server components in `src/app/[feature]/page.tsx`
-- [ ] T011 Wire suspense boundaries and optimistic UI states
-- [ ] T012 Implement data fetching with configured caching tags and revalidation
+- [ ] T008 [P] User model in src/models/user.py
+- [ ] T009 [P] UserService CRUD in src/services/user_service.py
+- [ ] T010 [P] CLI --create-user in src/cli/user_commands.py
+- [ ] T011 POST /api/users endpoint
+- [ ] T012 GET /api/users/{id} endpoint
+- [ ] T013 Input validation
+- [ ] T014 Error handling and logging
 
-## Phase 3.4: Resilience & Observability
-- [ ] T013 Update `error.tsx` and `not-found.tsx` fallbacks for the feature
-- [ ] T014 Emit structured logs and metrics for critical paths
-- [ ] T015 Validate `instrumentation.ts` spans and ensure edge runtime config aligns with plan
+## Phase 3.4: Integration
+- [ ] T015 Connect UserService to DB
+- [ ] T016 Auth middleware
+- [ ] T017 Request/response logging
+- [ ] T018 CORS and security headers
 
 ## Phase 3.5: Polish
-- [ ] T016 [P] Run `npm run lint` and address issues
-- [ ] T017 Execute automated tests (`npm run test` or equivalent) and ensure budgets hold
-- [ ] T018 [P] Update documentation (spec appendix, changelog, README excerpt)
-- [ ] T019 Final accessibility pass (keyboard navigation, aria attributes)
-- [ ] T020 Confirm rollback/feature flag plan documented
+- [ ] T019 [P] Unit tests for validation in tests/unit/test_validation.py
+- [ ] T020 Performance tests (<200ms)
+- [ ] T021 [P] Update docs/api.md
+- [ ] T022 Remove duplication
+- [ ] T023 Run manual-testing.md
 
 ## Dependencies
-- Tests (T004-T007) before implementation (T008-T012)
-- T008 blocks T009-T012
-- T013 depends on completed implementation work
-- Observability tasks (T014-T015) block deployment readiness
+- Tests (T004-T007) before implementation (T008-T014)
+- T008 blocks T009, T015
+- T016 blocks T018
+- Implementation before polish (T019-T023)
 
 ## Parallel Example
 ```
-# Launch guardrail-focused tests together:
-Task: "Route handler contract test in tests/contract/[feature].contract.spec.ts"
-Task: "Server action unit test in tests/actions/[feature].actions.spec.ts"
-Task: "Component integration test in tests/integration/[feature].render.spec.tsx"
-Task: "Performance budget assertions in tests/performance/[feature].budget.spec.ts"
+# Launch T004-T007 together:
+Task: "Contract test POST /api/users in tests/contract/test_users_post.py"
+Task: "Contract test GET /api/users/{id} in tests/contract/test_users_get.py"
+Task: "Integration test registration in tests/integration/test_registration.py"
+Task: "Integration test auth in tests/integration/test_auth.py"
 ```
 
 ## Notes
 - [P] tasks = different files, no dependencies
 - Verify tests fail before implementing
 - Commit after each task
-- Keep guardrail documentation (rendering, caching, observability) alongside tasks
+- Avoid: vague tasks, same file conflicts
 
 ## Task Generation Rules
 *Applied during main() execution*
 
 1. **From Contracts**:
-   - Each contract file -> contract test task [P]
-   - Each endpoint or server action -> implementation task
-  
+   - Each contract file → contract test task [P]
+   - Each endpoint → implementation task
+   
 2. **From Data Model**:
-   - Each entity -> model or data-mapping task [P]
-   - Relationships -> validation or serialization tasks
-  
+   - Each entity → model creation task [P]
+   - Relationships → service layer tasks
+   
 3. **From User Stories**:
-   - Each story -> integration test [P]
-   - Quickstart scenarios -> validation tasks
+   - Each story → integration test [P]
+   - Quickstart scenarios → validation tasks
 
-4. **Guardrails**:
-   - Rendering intent -> suspense/loading/error boundary tasks
-   - Caching strategy -> tag/revalidation tasks plus invalidation tests
-   - Performance budgets -> monitoring or synthetic test tasks
-   - Edge & observability -> instrumentation.ts, logging, alerting tasks
-
-5. **Ordering**:
-   - Setup -> Tests -> Implementation -> Resilience -> Polish
+4. **Ordering**:
+   - Setup → Tests → Models → Services → Endpoints → Polish
    - Dependencies block parallel execution
 
 ## Validation Checklist
@@ -130,7 +124,4 @@ Task: "Performance budget assertions in tests/performance/[feature].budget.spec.
 - [ ] All tests come before implementation
 - [ ] Parallel tasks truly independent
 - [ ] Each task specifies exact file path
-- [ ] Guardrail coverage (rendering, caching, observability, performance budgets) present
 - [ ] No task modifies same file as another [P] task
-
-
