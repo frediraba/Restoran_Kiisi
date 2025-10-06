@@ -1,7 +1,6 @@
 ﻿"use client";
 
-import { useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 import type { GuestProfile } from "@prisma/client";
 
@@ -14,15 +13,14 @@ type AccountFormProps = {
 };
 
 export function AccountForm({ profile, locations }: AccountFormProps) {
-  const [state, action] = useFormState<AccountFormState>(
+  const [state, action, pending] = useActionState<AccountFormState>(
     updateProfileAction,
     initialAccountState,
   );
-  const [pending, startTransition] = useTransition();
 
   return (
     <form
-      action={(formData) => startTransition(() => action(formData))}
+      action={action}
       className="grid gap-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
     >
       <input type="hidden" name="profileId" value={profile.id} />
