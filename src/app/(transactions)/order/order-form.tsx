@@ -8,6 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  DateTimePickerField,
+  getDefaultLocalValue,
+  toISOStringFromLocalInput,
+} from "@/components/date-time-picker";
 import { createOrderAction, type OrderLineInput } from "./actions";
 import { initialOrderFormState, type OrderFormState } from "./form-state";
 
@@ -33,13 +38,36 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
   const [state, action] = useActionState<OrderFormState>(createOrderAction, initialOrderFormState);
   const [selectedItemSlug, setSelectedItemSlug] = useState(menuItems[0]?.slug ?? "");
   const [quantity, setQuantity] = useState(1);
-  const [requestedTime, setRequestedTime] = useState<string>(() => {
-    const date = new Date();
-    date.setHours(18, 0, 0, 0);
-    return date.toISOString().slice(0, 16);
-  });
+  const defaultReadyAt = useMemo(() => getDefaultLocalValue(18, 0), []);
+  const [requestedTime, setRequestedTime] = useState<string>(defaultReadyAt);
   const [customTime, setCustomTime] = useState(false);
   const [pending, startTransition] = useTransition();
+
+  const quickPicks = useMemo(
+    () => [
+      {
+        id: "asap",
+        label: "As soon as possible",
+        description: "We\'ll confirm the earliest available slot.",
+        value: "",
+      },
+      {
+        id: "evening",
+        label: "Today · 6:00 PM",
+        description: "Great for dinner pickups.",
+        value: defaultReadyAt,
+      },
+      {
+        id: "custom",
+        label: "Custom time",
+        description: "Pick a date and time below.",
+        value: requestedTime,
+      },
+    ],
+    [defaultReadyAt, requestedTime],
+  );
+
+  const [activeQuickPickId, setActiveQuickPickId] = useState<string | null>("asap");
 
   const cartValue = useMemo(() => {
     const line: OrderLineInput = {
@@ -120,22 +148,36 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
           <input
             type="hidden"
             name="requestedReadyAt"
-            value={customTime && requestedTime ? new Date(requestedTime).toISOString() : ""}
+            value={customTime ? toISOStringFromLocalInput(requestedTime) : ""}
           />
 
-          <div className="grid gap-2">
-            <Label htmlFor="requestedReadyAt">Requested ready at</Label>
-            <Input
-              id="requestedReadyAt"
-              type="datetime-local"
-              step={1800}
-              value={requestedTime}
-              onChange={(event) => {
-                setRequestedTime(event.target.value);
-                setCustomTime(true);
-              }}
-            />
-          </div>
+          <DateTimePickerField
+            id="requestedReadyAt"
+            label="Requested ready at"
+            value={requestedTime}
+            onChange={(nextValue) => {
+              setRequestedTime(nextValue);
+              setCustomTime(true);
+              setActiveQuickPickId("custom");
+            }}
+            description="Choose when you\'d like your order to be ready."
+            quickPicks={quickPicks}
+            onQuickPick={(pick) => {
+              setActiveQuickPickId(pick.id);
+              if (pick.id === "asap") {
+                setCustomTime(false);
+                setRequestedTime(defaultReadyAt);
+                return;
+              }
+              setCustomTime(true);
+              if (pick.value) {
+                setRequestedTime(pick.value);
+              } else {
+                setRequestedTime(defaultReadyAt);
+              }
+            }}
+            activeQuickPickId={activeQuickPickId}
+          />
 
           <div className="grid gap-2">
             <Label htmlFor="paymentMode">Payment option</Label>

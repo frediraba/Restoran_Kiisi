@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition, useState, useActionState } from "react";
+import { useMemo, useTransition, useState, useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { DateTimePickerField, toLocalInputValue } from "@/components/date-time-picker";
 import { createReservationAction } from "./actions";
 import { initialReservationFormState, type ReservationFormState } from "./form-state";
 
@@ -25,11 +26,12 @@ export function ReservationForm({ locations }: ReservationFormProps) {
     createReservationAction,
     initialReservationFormState,
   );
-  const [requestedTime, setRequestedTime] = useState<string>(() => {
+  const defaultRequestedTime = useMemo(() => {
     const date = new Date();
-    date.setHours(date.getHours() + 2);
-    return date.toISOString().slice(0, 16);
-  });
+    date.setHours(date.getHours() + 2, 0, 0, 0);
+    return toLocalInputValue(date);
+  }, []);
+  const [requestedTime, setRequestedTime] = useState<string>(defaultRequestedTime);
   const [pending, startTransition] = useTransition();
 
   return (
@@ -57,18 +59,15 @@ export function ReservationForm({ locations }: ReservationFormProps) {
             <Input id="partySize" name="partySize" type="number" min={1} max={16} required defaultValue={4} />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="requestedTime">Preferred time</Label>
-            <Input
-              id="requestedTime"
-              name="requestedTime"
-              type="datetime-local"
-              data-testid="reservation-datetime"
-              step={1800}
-              value={requestedTime}
-              onChange={(event) => setRequestedTime(event.target.value)}
-            />
-          </div>
+          <input type="hidden" name="requestedTime" value={requestedTime} />
+
+          <DateTimePickerField
+            id="requestedTime"
+            label="Preferred time"
+            value={requestedTime}
+            onChange={(nextValue) => setRequestedTime(nextValue)}
+            description="Reservations are confirmed instantly when the slot is free."
+          />
 
           <div className="grid gap-2">
             <Label htmlFor="name">Contact name</Label>
