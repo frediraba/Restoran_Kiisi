@@ -18,7 +18,8 @@ export function AccountSignInForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+    const form = event.currentTarget;
+    const formData = new FormData(form);
     const email = String(formData.get("email") ?? "").trim();
     const password = String(formData.get("password") ?? "");
 
@@ -38,7 +39,7 @@ export function AccountSignInForm() {
       return;
     }
 
-    event.currentTarget.reset();
+    form.reset();
     setSignedIn(true);
     setPending(false);
     router.replace("/account?welcome=1");
