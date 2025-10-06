@@ -72,8 +72,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
             {primary.map((link) => {
               const active = isActivePath(pathname ?? "/", link.href);
-              const emphasize = link.label.toLowerCase() === "reserve";
-              const variant = active ? "default" : emphasize ? "outline" : "ghost";
+              const variant = active ? "default" : "outline";
 
               return (
                 <Link
@@ -85,11 +84,10 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                       variant,
                       size: "sm",
                     }),
-                    "h-10 rounded-full px-5",
-                    active && "ring-2 ring-primary/30",
-                    !active && !emphasize && "text-muted-foreground hover:text-foreground",
-                    emphasize && !active &&
-                      "border-primary/40 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary",
+                    "h-10 rounded-full px-5 ring-1 ring-border/60",
+                    active
+                      ? "ring-2 ring-primary/30"
+                      : "border-primary/50 text-primary hover:border-primary/60 hover:bg-primary/10 hover:text-primary",
                   )}
                 >
                   <span>{link.label}</span>
