@@ -11,6 +11,14 @@ import {
 } from "@/components/ui/card";
 import { getMenuWithCategories } from "@/lib/data";
 
+function parseDietaryTags(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((tag): tag is string => typeof tag === "string" && tag.trim().length > 0);
+}
+
 function formatPrice(value: unknown) {
   if (typeof value === "number") {
     return value.toFixed(2);
@@ -60,36 +68,40 @@ async function MenuContent() {
             </Badge>
           </div>
           <div className="grid gap-6 md:grid-cols-2">
-            {category.menuItems.map((item) => (
-              <Card
-                key={item.id}
-                className={item.isAvailable ? "h-full" : "h-full border-amber-300/80 bg-amber-50/80"}
-              >
-                <CardHeader className="gap-3 p-6 pb-0">
-                  <div className="flex items-start justify-between gap-4">
-                    <CardTitle className="text-xl">{item.name}</CardTitle>
-                    <span className="text-sm font-semibold text-foreground">€{formatPrice(item.price)}</span>
-                  </div>
-                  {item.description ? <CardDescription>{item.description}</CardDescription> : null}
-                </CardHeader>
-                <CardContent className="p-6 pt-4">
-                  {Array.isArray(item.dietaryTags) && item.dietaryTags.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {item.dietaryTags.map((tag) => (
-                        <Badge key={tag} variant="outline">
-                          {tag}
-                        </Badge>
-                      ))}
+            {category.menuItems.map((item) => {
+              const dietaryTags = parseDietaryTags(item.dietaryTags);
+
+              return (
+                <Card
+                  key={item.id}
+                  className={item.isAvailable ? "h-full" : "h-full border-amber-300/80 bg-amber-50/80"}
+                >
+                  <CardHeader className="gap-3 p-6 pb-0">
+                    <div className="flex items-start justify-between gap-4">
+                      <CardTitle className="text-xl">{item.name}</CardTitle>
+                      <span className="text-sm font-semibold text-foreground">€{formatPrice(item.price)}</span>
                     </div>
-                  ) : null}
-                  {!item.isAvailable ? (
-                    <Badge variant="subtle" className="mt-4 bg-amber-100 text-amber-700">
-                      Currently unavailable
-                    </Badge>
-                  ) : null}
-                </CardContent>
-              </Card>
-            ))}
+                    {item.description ? <CardDescription>{item.description}</CardDescription> : null}
+                  </CardHeader>
+                  <CardContent className="p-6 pt-4">
+                    {dietaryTags.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {dietaryTags.map((tag) => (
+                          <Badge key={tag} variant="outline">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    ) : null}
+                    {!item.isAvailable ? (
+                      <Badge variant="subtle" className="mt-4 bg-amber-100 text-amber-700">
+                        Currently unavailable
+                      </Badge>
+                    ) : null}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </section>
       ))}
