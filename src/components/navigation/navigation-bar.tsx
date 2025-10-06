@@ -58,14 +58,14 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
         <div className="relative mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-4 px-6">
           <Link
             href="/"
-            className="group inline-flex items-center gap-3 rounded-full border border-transparent bg-background/40 px-3 py-1 transition hover:border-border/70 hover:bg-background/70"
+            className="group inline-flex items-center gap-4 rounded-full border border-transparent bg-background/40 px-3 py-1 transition hover:border-border/70 hover:bg-background/70"
           >
-            <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 text-sm font-bold uppercase tracking-tight text-primary">
-              RK
+            <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 text-sm font-black uppercase tracking-[0.35em] text-primary-foreground shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-transform group-hover:scale-105">
+              <span className="absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
+              <span className="relative">RK</span>
             </span>
-            <span className="flex flex-col leading-tight">
-              <span className="text-base font-semibold text-foreground">Restoran Kiisi</span>
-              <span className="text-xs font-medium text-muted-foreground">Estonian tasting rooms</span>
+            <span className="flex flex-col justify-center text-left leading-tight">
+              <span className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">Restoran Kiisi</span>
             </span>
           </Link>
 
