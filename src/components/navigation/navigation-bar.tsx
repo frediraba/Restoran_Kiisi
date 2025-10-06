@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { buttonClasses } from "@/components/ui/button";
+import { Button, buttonClasses } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export type NavigationLink = {
@@ -40,16 +42,24 @@ function isActivePath(pathname: string, href: string) {
 
 export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps) {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" aria-hidden />
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"
+        aria-hidden
+      />
+      <div className="relative mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-4 px-6">
         <Link
           href="/"
-          className="group inline-flex items-center gap-3 rounded-full border border-transparent px-3 py-1 transition hover:border-border/80"
+          className="group inline-flex items-center gap-3 rounded-full border border-transparent bg-background/40 px-3 py-1 transition hover:border-border/70 hover:bg-background/70"
         >
-          <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/15 text-sm font-bold uppercase tracking-tight text-primary">
+          <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-primary/15 text-sm font-bold uppercase tracking-tight text-primary">
             RK
           </span>
           <span className="flex flex-col leading-tight">
@@ -57,10 +67,12 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             <span className="text-xs font-medium text-muted-foreground">Estonian tasting rooms</span>
           </span>
         </Link>
-        <nav aria-label="Primary" className="hidden items-center gap-2 md:flex">
+
+        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
           {primary.map((link) => {
             const active = isActivePath(pathname ?? "/", link.href);
             const emphasize = link.label.toLowerCase() === "reserve";
+
             return (
               <Link
                 key={link.id}
@@ -68,11 +80,12 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                 aria-current={active ? "page" : undefined}
                 className={cn(
                   buttonClasses({
-                    variant: active ? "default" : emphasize ? "default" : "ghost",
+                    variant: active || emphasize ? "default" : "ghost",
                     size: "sm",
                   }),
                   "h-10 rounded-full px-5",
-                  !active && !emphasize && "text-muted-foreground",
+                  active && "ring-2 ring-primary/30",
+                  !active && !emphasize && "text-muted-foreground hover:text-foreground",
                 )}
               >
                 <span>{link.label}</span>
@@ -81,47 +94,153 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             );
           })}
         </nav>
-        <nav aria-label="Secondary" className="hidden items-center gap-3 text-sm text-muted-foreground lg:flex">
-          {secondary.map((link) => {
-            const active = isActivePath(pathname ?? "/", link.href);
-            return (
-              <Link
-                key={link.id}
-                href={link.href}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "rounded-full px-3 py-2 transition hover:text-foreground",
-                  active && "bg-muted text-foreground",
-                )}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </nav>
+
+        <div className="hidden items-center gap-3 lg:flex">
+          <Separator orientation="vertical" className="h-6" />
+          <nav aria-label="Secondary" className="flex items-center gap-2 text-sm">
+            {secondary.map((link) => {
+              const active = isActivePath(pathname ?? "/", link.href);
+              return (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "rounded-full px-3 py-2 transition",
+                    active ? "bg-muted text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="relative -mr-2 h-10 w-10 md:hidden"
+          aria-expanded={mobileOpen}
+          aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+          onClick={() => setMobileOpen((value) => !value)}
+        >
+          <span className="sr-only">Toggle navigation</span>
+          <span
+            className={cn(
+              "absolute h-0.5 w-6 rounded-full bg-foreground transition-all",
+              mobileOpen ? "translate-y-0 rotate-45" : "-translate-y-2",
+            )}
+          />
+          <span
+            className={cn(
+              "absolute h-0.5 w-6 rounded-full bg-foreground transition-all",
+              mobileOpen ? "opacity-0" : "opacity-100",
+            )}
+          />
+          <span
+            className={cn(
+              "absolute h-0.5 w-6 rounded-full bg-foreground transition-all",
+              mobileOpen ? "translate-y-0 -rotate-45" : "translate-y-2",
+            )}
+          />
+        </Button>
       </div>
-      <nav
-        aria-label="Mobile"
-        className="flex items-center justify-around border-t border-border/60 bg-background px-2 py-3 md:hidden"
-      >
-        {mobile.map((link) => {
-          const active = isActivePath(pathname ?? "/", link.href);
-          return (
-            <Link
-              key={link.id}
-              href={link.href}
-              aria-current={active ? "page" : undefined}
-              className={cn(
-                "flex min-w-0 flex-col items-center gap-1 rounded-full px-3 py-2 text-xs font-medium transition",
-                active ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              <span>{link.label}</span>
-              {link.badge ? <span className="text-[10px] uppercase tracking-widest text-primary">{link.badge}</span> : null}
-            </Link>
-          );
-        })}
-      </nav>
+
+      {mobileOpen ? (
+        <div className="border-t border-border/60 bg-background/95 shadow-lg md:hidden" role="dialog" aria-modal>
+          <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-6">
+            <div className="grid gap-2">
+              {primary.map((link) => {
+                const active = isActivePath(pathname ?? "/", link.href);
+                const emphasize = link.label.toLowerCase() === "reserve";
+                return (
+                  <Link
+                    key={link.id}
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={cn(
+                      "flex items-center justify-between rounded-2xl border border-border/60 px-4 py-3 text-sm font-semibold transition",
+                      active
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : emphasize
+                          ? "bg-primary/10 text-primary hover:bg-primary/20"
+                          : "bg-muted/40 text-foreground hover:bg-muted",
+                    )}
+                  >
+                    <span>{link.label}</span>
+                    {link.badge ? <Badge>{link.badge}</Badge> : null}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {secondary.length ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    Discover
+                  </span>
+                  <Separator className="flex-1" />
+                </div>
+                <div className="grid gap-2">
+                  {secondary.map((link) => {
+                    const active = isActivePath(pathname ?? "/", link.href);
+                    return (
+                      <Link
+                        key={link.id}
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "rounded-2xl px-4 py-3 text-sm font-medium transition",
+                          active ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                        )}
+                      >
+                        {link.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+
+            {mobile.length ? (
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                    Quick links
+                  </span>
+                  <Separator className="flex-1" />
+                </div>
+                <div className="grid gap-2">
+                  {mobile.map((link) => {
+                    const active = isActivePath(pathname ?? "/", link.href);
+                    return (
+                      <Link
+                        key={link.id}
+                        href={link.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "rounded-2xl border border-border/50 px-4 py-3 text-sm font-medium transition",
+                          active
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:border-border hover:bg-muted/40 hover:text-foreground",
+                        )}
+                      >
+                        <div className="flex items-center justify-between gap-3">
+                          <span>{link.label}</span>
+                          {link.badge ? <Badge variant="outline">{link.badge}</Badge> : null}
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }

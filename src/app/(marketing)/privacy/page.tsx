@@ -1,119 +1,167 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+const sections = [
+  {
+    title: "Information we collect",
+    description:
+      "We gather details you share with us directly as well as information that helps us keep the website secure and easy to use.",
+    subsections: [
+      {
+        subtitle: "Personal information",
+        items: [
+          "Name and contact information (email, phone number)",
+          "Reservation, order history, and guest preferences",
+          "Dietary notes and special requests",
+          "Payment details processed securely via third parties",
+        ],
+      },
+      {
+        subtitle: "Automatically collected information",
+        items: [
+          "Website usage data and analytics",
+          "Device details such as browser, operating system, and language",
+          "IP address and general location",
+          "Cookies and similar tracking technologies",
+        ],
+      },
+    ],
+  },
+  {
+    title: "How we use your information",
+    description: "Your information allows us to deliver a refined dining experience and keep you informed about Kiisi.",
+    items: [
+      "Process reservations, orders, and event enquiries",
+      "Communicate about your dining experience and service updates",
+      "Share menu news and seasonal offers when you opt in",
+      "Improve our website, menus, and hospitality through feedback",
+      "Comply with legal obligations and maintain security",
+    ],
+  },
+  {
+    title: "Information sharing",
+    description:
+      "We respect your privacy—your personal details are only shared in limited circumstances when necessary to operate our services.",
+    items: [
+      "With your explicit consent",
+      "With trusted service providers supporting reservations, payments, and communications",
+      "When required by law or to protect the rights and safety of our guests and team",
+      "In the event of a business transfer or acquisition",
+    ],
+  },
+  {
+    title: "Data security",
+    description:
+      "We implement administrative, technical, and physical safeguards to protect your personal information. While no internet transmission is entirely risk-free, we continually review our practices to keep your data safe.",
+  },
+  {
+    title: "Your rights",
+    description:
+      "Depending on your location, you may have certain rights regarding the personal information we hold about you.",
+    items: [
+      "Access and review the information we store",
+      "Request corrections to inaccurate details",
+      "Ask for deletion where permitted by law",
+      "Object to or restrict certain processing activities",
+      "Withdraw consent for marketing communications at any time",
+    ],
+  },
+  {
+    title: "Cookies and tracking",
+    description:
+      "We use cookies to improve performance, analyse traffic, and personalise content. You can adjust your browser settings to manage or disable cookies, though this may impact some site features.",
+  },
+  {
+    title: "Changes to this policy",
+    description:
+      "We may update this policy periodically. When we make material changes, we&apos;ll update the date above and, when appropriate, notify you directly.",
+  },
+];
+
+const contactDetails = [
+  { label: "Email", value: "privacy@restorankiisi.ee" },
+  { label: "Phone", value: "+372 555 12345" },
+  { label: "Address", value: "Tallinn Old Town, Estonia" },
+];
+
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-4xl space-y-8 px-6 py-12">
-      <header className="space-y-2">
-        <h1 className="text-3xl font-semibold text-neutral-900">Privacy Policy</h1>
-        <p className="text-sm text-neutral-500">
-          Last updated: October 6, 2025
-        </p>
-      </header>
-
-      <div className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Information We Collect</h2>
-          <p className="text-sm text-neutral-600">
-            At Restoran Kiisi, we collect information you provide directly to us, such as when you make a reservation, 
-            place an order, create an account, or contact us for support.
-          </p>
-          
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-neutral-900">Personal Information</h3>
-            <ul className="space-y-2 text-sm text-neutral-600 ml-4">
-              <li>• Name and contact information (email, phone number)</li>
-              <li>• Reservation and order history</li>
-              <li>• Dietary preferences and special requests</li>
-              <li>• Payment information (processed securely through third-party providers)</li>
-            </ul>
-          </div>
-
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-neutral-900">Automatically Collected Information</h3>
-            <ul className="space-y-2 text-sm text-neutral-600 ml-4">
-              <li>• Website usage data and analytics</li>
-              <li>• Device information and browser type</li>
-              <li>• IP address and location data</li>
-              <li>• Cookies and similar tracking technologies</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">How We Use Your Information</h2>
-          <p className="text-sm text-neutral-600">
-            We use the information we collect to provide, maintain, and improve our services:
-          </p>
-          <ul className="space-y-2 text-sm text-neutral-600 ml-4">
-            <li>• Process reservations and orders</li>
-            <li>• Communicate with you about your dining experience</li>
-            <li>• Send you updates about our menu and special offers (with your consent)</li>
-            <li>• Improve our website and services</li>
-            <li>• Comply with legal obligations</li>
-          </ul>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Information Sharing</h2>
-          <p className="text-sm text-neutral-600">
-            We do not sell, trade, or otherwise transfer your personal information to third parties, except in the following circumstances:
-          </p>
-          <ul className="space-y-2 text-sm text-neutral-600 ml-4">
-            <li>• With your explicit consent</li>
-            <li>• To trusted service providers who assist in operating our website and conducting our business</li>
-            <li>• When required by law or to protect our rights and safety</li>
-            <li>• In connection with a business transfer or acquisition</li>
-          </ul>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Data Security</h2>
-          <p className="text-sm text-neutral-600">
-            We implement appropriate security measures to protect your personal information against unauthorized access, 
-            alteration, disclosure, or destruction. However, no method of transmission over the internet is 100% secure.
+    <div className="mx-auto max-w-5xl space-y-16 px-6 py-16">
+      <section className="space-y-6 text-center md:text-left">
+        <Badge className="mx-auto md:mx-0" variant="outline">
+          Privacy policy
+        </Badge>
+        <div className="space-y-3">
+          <h1 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">Your privacy matters</h1>
+          <p className="text-base text-muted-foreground md:max-w-2xl">
+            Last updated: <strong>October 6, 2025</strong>. We are committed to protecting your personal information and being transparent about how it&apos;s used.
           </p>
         </div>
+      </section>
 
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Your Rights</h2>
-          <p className="text-sm text-neutral-600">
-            Under applicable data protection laws, you have the right to:
-          </p>
-          <ul className="space-y-2 text-sm text-neutral-600 ml-4">
-            <li>• Access and review your personal information</li>
-            <li>• Correct inaccurate or incomplete information</li>
-            <li>• Request deletion of your personal information</li>
-            <li>• Object to or restrict processing of your information</li>
-            <li>• Withdraw consent for marketing communications</li>
-          </ul>
-        </div>
+      <section className="space-y-6">
+        {sections.map((section) => (
+          <Card key={section.title}>
+            <CardHeader className="space-y-3">
+              <CardTitle>{section.title}</CardTitle>
+              <CardDescription>{section.description}</CardDescription>
+            </CardHeader>
+            {section.subsections ? (
+              <CardContent className="space-y-6 text-sm text-muted-foreground">
+                {section.subsections.map((subsection) => (
+                  <div key={subsection.subtitle} className="space-y-3">
+                    <p className="text-sm font-semibold text-foreground">{subsection.subtitle}</p>
+                    <ul className="space-y-2">
+                      {subsection.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2">
+                          <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </CardContent>
+            ) : section.items ? (
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <ul className="space-y-2">
+                  {section.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <span className="mt-1 h-1.5 w-1.5 rounded-full bg-primary" aria-hidden />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            ) : null}
+          </Card>
+        ))}
+      </section>
 
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Cookies and Tracking</h2>
-          <p className="text-sm text-neutral-600">
-            We use cookies and similar technologies to enhance your browsing experience, analyze website traffic, 
-            and personalize content. You can control cookie settings through your browser preferences.
-          </p>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Contact Us</h2>
-          <p className="text-sm text-neutral-600">
-            If you have any questions about this Privacy Policy or our data practices, please contact us:
-          </p>
-          <div className="space-y-2 text-sm text-neutral-600">
-            <p><strong>Email:</strong> privacy@restorankiisi.ee</p>
-            <p><strong>Phone:</strong> +372 555 12345</p>
-            <p><strong>Address:</strong> Tallinn Old Town, Estonia</p>
-          </div>
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-neutral-900">Changes to This Policy</h2>
-          <p className="text-sm text-neutral-600">
-            We may update this Privacy Policy from time to time. We will notify you of any material changes by 
-            posting the new policy on this page and updating the "Last updated" date.
-          </p>
-        </div>
-      </div>
+      <section>
+        <Card>
+          <CardHeader className="space-y-3">
+            <CardTitle>Contact us</CardTitle>
+            <CardDescription>
+              Have questions about this policy or how we handle your information? We&apos;re here to help.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4 text-sm text-muted-foreground sm:grid-cols-3">
+            {contactDetails.map((detail) => (
+              <div key={detail.label} className="rounded-2xl border border-border/60 bg-muted/20 p-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">{detail.label}</p>
+                <p className="mt-2 text-sm font-medium text-foreground">{detail.value}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }
