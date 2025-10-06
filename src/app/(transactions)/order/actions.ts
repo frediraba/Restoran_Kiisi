@@ -29,8 +29,15 @@ export type OrderSessionInput = {
   specialInstructions?: string;
 };
 
+const ORDER_SLOT_INTERVAL_MINUTES = 30;
+
 function toMinutes(date: Date) {
   return date.getUTCHours() * 60 + date.getUTCMinutes();
+}
+
+function roundToInterval(date: Date, intervalMinutes: number) {
+  const ms = intervalMinutes * 60 * 1000;
+  return new Date(Math.round(date.getTime() / ms) * ms);
 }
 
 type ServiceHour = {
@@ -84,11 +91,16 @@ function resolveRequestedAt(hours: ServiceHour[], requested?: string) {
   if (requested) {
     const parsed = new Date(requested);
     if (!Number.isNaN(parsed.getTime())) {
-      return parsed;
+      return roundToInterval(parsed, ORDER_SLOT_INTERVAL_MINUTES);
     }
     throw new Error("Invalid requested time");
   }
-  return findNextServiceTime(hours, new Date());
+  const baseline = findNextServiceTime(hours, new Date());
+  const normalized = roundToInterval(baseline, ORDER_SLOT_INTERVAL_MINUTES);
+  if (normalized.getTime() < baseline.getTime()) {
+    return new Date(normalized.getTime() + ORDER_SLOT_INTERVAL_MINUTES * 60 * 1000);
+  }
+  return normalized;
 }
 
 
