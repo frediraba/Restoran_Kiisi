@@ -2,24 +2,27 @@
 
 import { useTransition } from "react";
 
+import { Button } from "@/components/ui/button";
+
 import { signOutAccountAction } from "./account-actions";
 
 export function AccountSignOutButton() {
   const [pending, startTransition] = useTransition();
 
   return (
-    <button
+    <Button
       type="button"
+      variant="ghost"
       onClick={() =>
         startTransition(async () => {
           await signOutAccountAction();
           window.location.href = "/account?signedOut=1";
         })
       }
-      className="text-sm font-semibold text-amber-600 hover:text-amber-700 disabled:opacity-50"
+      className="h-11 px-5 text-primary hover:bg-primary/10"
       disabled={pending}
     >
       {pending ? "Signing out..." : "Sign out"}
-    </button>
+    </Button>
   );
 }
