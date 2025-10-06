@@ -64,7 +64,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
               <span className="absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
               <span className="relative">RK</span>
             </span>
-            <span className="flex flex-col justify-center text-left leading-tight">
+            <span className="flex flex-col items-center justify-center text-center leading-tight">
               <span className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">Restoran Kiisi</span>
             </span>
           </Link>
@@ -98,7 +98,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
 
           <div className="hidden items-center gap-3 lg:flex">
             <Separator orientation="vertical" className="h-6" />
-            <nav aria-label="Secondary" className="flex items-center gap-2 text-sm">
+            <nav aria-label="Secondary" className="flex items-center gap-2 text-xs">
               {secondary.map((link) => {
                 const active = isActivePath(pathname ?? "/", link.href);
                 return (
@@ -107,7 +107,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     className={cn(
-                      "rounded-full px-3 py-2 transition",
+                      "rounded-full px-2.5 py-1.5 transition",
                       active ? "bg-muted text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
                     )}
                   >
@@ -122,7 +122,7 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             type="button"
             variant="ghost"
             size="icon"
-            className="relative -mr-2 h-10 w-10 md:hidden"
+            className="relative h-10 w-10 md:hidden"
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             onClick={() => setMobileOpen((value) => !value)}
