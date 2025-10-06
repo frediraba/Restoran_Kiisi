@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { SiteFooter, SiteHeader } from "@/components/navigation/site-header";
 import { SkeletonFooter, SkeletonHeader } from "@/components/navigation/skeletons";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 export const preferredRegion = "fra1";
 
 export default function MarketingLayout({
