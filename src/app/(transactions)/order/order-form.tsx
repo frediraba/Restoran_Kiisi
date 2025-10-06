@@ -2,6 +2,12 @@
 
 import { useEffect, useMemo, useState, useTransition, useActionState } from "react";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { createOrderAction, type OrderLineInput } from "./actions";
 import { initialOrderFormState, type OrderFormState } from "./form-state";
 
@@ -50,207 +56,155 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
   }, [state]);
 
   return (
-    <form
-      action={(formData) => {
-        startTransition(() => {
-          action(formData);
-        });
-      }}
-      className="mx-auto grid max-w-3xl gap-6 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
-    >
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="location">
-          Location
-        </label>
-        <select
-          id="location"
-          name="location"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          required
-          defaultValue={locations[0]?.slug ?? ""}
-        >
-          {locations.map((location) => (
-            <option key={location.slug} value={location.slug}>
-              {location.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="serviceType">
-          Service type
-        </label>
-        <select
-          id="serviceType"
-          name="serviceType"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          defaultValue="pickup"
-        >
-          <option value="pickup">Pickup</option>
-          <option value="dine-in">Dine in</option>
-        </select>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="grid gap-2">
-          <label className="text-sm font-medium text-neutral-700" htmlFor="menuItem">
-            Menu item
-          </label>
-          <select
-            id="menuItem"
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-            value={selectedItemSlug}
-            onChange={(event) => setSelectedItemSlug(event.target.value)}
-          >
-            {menuItems.map((item) => (
-              <option key={item.slug} value={item.slug}>
-                {item.name} - {currencyFormatter.format(item.price)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="grid gap-2">
-          <label className="text-sm font-medium text-neutral-700" htmlFor="quantity">
-            Quantity
-          </label>
-          <input
-            id="quantity"
-            type="number"
-            min={1}
-            max={10}
-            className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-            value={quantity}
-            onChange={(event) => setQuantity(Number.parseInt(event.target.value, 10) || 1)}
-          />
-        </div>
-      </div>
-
-      <input type="hidden" name="cart" value={cartValue} />
-
-      <input
-        type="hidden"
-        name="requestedReadyAt"
-        value={customTime && requestedTime ? new Date(requestedTime).toISOString() : ""}
-      />
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="requestedReadyAt">
-          Requested ready at
-        </label>
-        <input
-          id="requestedReadyAt"
-          type="datetime-local"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          step={1800}
-          value={requestedTime}
-          onChange={(event) => {
-            setRequestedTime(event.target.value);
-            setCustomTime(true);
-          }}
-        />
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="paymentMode">
-          Payment option
-        </label>
-        <select
-          id="paymentMode"
-          name="paymentMode"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-          defaultValue="pay_on_site"
-        >
-          <option value="pay_on_site">Pay at counter</option>
-          <option value="invoice_email">Invoice by email</option>
-        </select>
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="name">
-          Contact name
-        </label>
-        <input
-          id="name"
-          name="name"
-          type="text"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="email">
-          Contact email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          required
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="phone">
-          Contact phone
-        </label>
-        <input
-          id="phone"
-          name="phone"
-          type="tel"
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="grid gap-2">
-        <label className="text-sm font-medium text-neutral-700" htmlFor="specialInstructions">
-          Special instructions
-        </label>
-        <textarea
-          id="specialInstructions"
-          name="specialInstructions"
-          rows={3}
-          className="rounded-lg border border-neutral-200 px-3 py-2 text-sm"
-        />
-      </div>
-
-      <div className="flex items-center justify-between rounded-lg bg-neutral-50 px-4 py-3 text-sm text-neutral-600">
-        <p>
-          Service hours are enforced. Orders outside opening times will receive the next available slot or an error.
-        </p>
-      </div>
-
-      {state.status === "error" ? (
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700"
-        >
-          {state.message}
-        </div>
-      ) : null}
-      {state.status === "success" ? (
-        <div
-          role="status"
-          aria-live="polite"
-          className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700"
-        >
-          <p className="font-semibold">Order {state.orderId} confirmed.</p>
-          <p>{state.instructions}</p>
-        </div>
-      ) : null}
-
-      <button
-        type="submit"
-        className="inline-flex items-center justify-center rounded-full bg-amber-600 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-amber-700 disabled:opacity-60"
-        disabled={pending}
+    <Card className="border-border/70 bg-card/95">
+      <form
+        action={(formData) => {
+          startTransition(() => {
+            action(formData);
+          });
+        }}
+        className="grid gap-6"
       >
-        {pending ? "SubmittingÃ¢â‚¬Â¦" : "Submit order"}
-      </button>
-    </form>
+        <CardContent className="grid gap-6 p-8">
+          <div className="grid gap-2">
+            <Label htmlFor="location">Location</Label>
+            <Select id="location" name="location" required defaultValue={locations[0]?.slug ?? ""}>
+              {locations.map((location) => (
+                <option key={location.slug} value={location.slug}>
+                  {location.name}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="serviceType">Service type</Label>
+            <Select id="serviceType" name="serviceType" defaultValue="pickup">
+              <option value="pickup">Pickup</option>
+              <option value="dine-in">Dine in</option>
+            </Select>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-2">
+              <Label htmlFor="menuItem">Menu item</Label>
+              <Select
+                id="menuItem"
+                name="menuItem"
+                value={selectedItemSlug}
+                onChange={(event) => setSelectedItemSlug(event.target.value)}
+              >
+                {menuItems.map((item) => (
+                  <option key={item.slug} value={item.slug}>
+                    {item.name} — {currencyFormatter.format(item.price)}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="quantity">Quantity</Label>
+              <Input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min={1}
+                max={10}
+                value={quantity}
+                onChange={(event) => setQuantity(Number.parseInt(event.target.value, 10) || 1)}
+              />
+            </div>
+          </div>
+
+          <input type="hidden" name="cart" value={cartValue} />
+
+          <input
+            type="hidden"
+            name="requestedReadyAt"
+            value={customTime && requestedTime ? new Date(requestedTime).toISOString() : ""}
+          />
+
+          <div className="grid gap-2">
+            <Label htmlFor="requestedReadyAt">Requested ready at</Label>
+            <Input
+              id="requestedReadyAt"
+              type="datetime-local"
+              step={1800}
+              value={requestedTime}
+              onChange={(event) => {
+                setRequestedTime(event.target.value);
+                setCustomTime(true);
+              }}
+            />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="paymentMode">Payment option</Label>
+            <Select id="paymentMode" name="paymentMode" defaultValue="pay_on_site">
+              <option value="pay_on_site">Pay at counter</option>
+              <option value="invoice_email">Invoice by email</option>
+            </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="name">Contact name</Label>
+            <Input id="name" name="name" type="text" autoComplete="name" />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="email">Contact email</Label>
+            <Input id="email" name="email" type="email" required autoComplete="email" />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Contact phone</Label>
+            <Input id="phone" name="phone" type="tel" autoComplete="tel" />
+          </div>
+
+          <div className="grid gap-2">
+            <Label htmlFor="specialInstructions">Special instructions</Label>
+            <Textarea id="specialInstructions" name="specialInstructions" rows={3} />
+          </div>
+
+          <div className="rounded-3xl border border-dashed border-border/70 bg-muted/40 px-5 py-4 text-sm text-muted-foreground">
+            Service hours are enforced. Orders outside opening times will receive the next available slot or an error.
+          </div>
+
+          {state.status === "error" ? (
+            <div
+              role="alert"
+              aria-live="assertive"
+              className="rounded-3xl border border-rose-200 bg-rose-50 px-5 py-4 text-sm text-rose-700"
+            >
+              {state.message}
+            </div>
+          ) : null}
+          {state.status === "success" ? (
+            <div
+              role="status"
+              aria-live="polite"
+              className="rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm text-emerald-700"
+            >
+              <p className="font-semibold">Order {state.orderId} confirmed.</p>
+              <p>{state.instructions}</p>
+            </div>
+          ) : null}
+        </CardContent>
+        <div className="flex items-center justify-end gap-3 border-t border-border/70 bg-muted/30 px-8 py-5">
+          <Button
+            type="submit"
+            className="bg-transparent text-muted-foreground hover:bg-muted/60"
+            variant="ghost"
+            name="intent"
+            value="check"
+            disabled={pending}
+          >
+            {pending ? "Checking…" : "Check availability"}
+          </Button>
+          <Button type="submit" name="intent" value="confirm" disabled={pending}>
+            {pending ? "Submitting…" : "Submit order"}
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }
-
-
-
