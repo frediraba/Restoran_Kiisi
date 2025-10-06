@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonClasses } from "@/components/ui/button";
@@ -43,6 +43,8 @@ function isActivePath(pathname: string, href: string) {
 export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const emblemGradientId = useId();
+  const accentGradientId = useId();
 
   useEffect(() => {
     setMobileOpen(false);
@@ -60,9 +62,36 @@ export function NavigationBar({ primary, secondary, mobile }: NavigationBarProps
             href="/"
             className="group inline-flex items-center gap-4 rounded-full border border-primary/10 bg-white/70 px-3 py-1 shadow-[0_6px_20px_rgba(255,125,0,0.12)] transition hover:border-primary/20 hover:bg-white"
           >
-            <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 text-sm font-black uppercase tracking-[0.35em] text-primary-foreground shadow-[0_4px_12px_rgba(0,0,0,0.12)] transition-transform group-hover:scale-105">
+            <span className="relative inline-flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-primary via-amber-500 to-orange-600 shadow-[0_4px_16px_rgba(255,125,0,0.3)] transition-transform group-hover:scale-105">
               <span className="absolute inset-0 rounded-full border border-white/40 opacity-0 transition-opacity group-hover:opacity-100" />
-              <span className="relative">RK</span>
+              <span className="absolute inset-[2px] rounded-full bg-[radial-gradient(circle_at_30%_25%,rgba(255,255,255,0.7),rgba(255,255,255,0)_55%)]" />
+              <span className="absolute inset-[1px] rounded-full border border-white/30 opacity-80" aria-hidden />
+              <svg
+                aria-hidden
+                viewBox="0 0 64 64"
+                className="relative h-7 w-7 drop-shadow-[0_4px_8px_rgba(0,0,0,0.25)]"
+              >
+                <defs>
+                  <linearGradient id={emblemGradientId} x1="16" y1="12" x2="58" y2="54" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stopColor="#fff6e8" />
+                    <stop offset="0.45" stopColor="#ffe4c7" />
+                    <stop offset="1" stopColor="#ffd19b" />
+                  </linearGradient>
+                  <linearGradient id={accentGradientId} x1="22" y1="16" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stopColor="#fff" stopOpacity="0.9" />
+                    <stop offset="0.35" stopColor="#fff7e8" stopOpacity="0.6" />
+                    <stop offset="1" stopColor="#ffd4a1" stopOpacity="0.9" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M18 16h12.5c9.5 0 14.5 5 14.5 11.8 0 7-4.8 12-13.6 12h-2.5l15.8 19.2h-7.4L24.5 39.7V54H18V16Zm12.4 18.9h2.3c5.1 0 8-2.7 8-7 0-4.2-2.9-6.6-7.9-6.6h-2.4v13.6Z"
+                  fill={`url(#${emblemGradientId})`}
+                />
+                <path
+                  d="M41.5 16h6V29l9.5-13h7.4L52.8 33l12.4 21h-7.2l-8.5-14.8V54h-6V16Z"
+                  fill={`url(#${accentGradientId})`}
+                />
+              </svg>
             </span>
             <span className="flex flex-col items-center justify-center text-center leading-tight">
               <span className="text-base font-semibold text-foreground transition-colors group-hover:text-primary">Restoran Kiisi</span>
