@@ -1,0 +1,26 @@
+﻿{
+  "primary": [
+    { "label": "Menu", "href": "/menu", "type": "primary", "icon": null, "badge": null },
+    { "label": "Order", "href": "/order", "type": "primary", "icon": "utensils", "badge": null },
+    { "label": "Reserve", "href": "/reserve", "type": "primary", "icon": "calendar", "badge": null },
+    { "label": "Locations", "href": "/locations", "type": "primary", "icon": "map-pin", "badge": null },
+    { "label": "Contact", "href": "/contact", "type": "primary", "icon": "phone", "badge": null }
+  ],
+  "secondary": [
+    { "label": "Offers", "href": "/offers", "type": "secondary" },
+    { "label": "Gift Cards", "href": "/gift-cards", "type": "secondary" },
+    { "label": "Catering", "href": "/catering", "type": "secondary" },
+    { "label": "Events", "href": "/events", "type": "secondary" },
+    { "label": "Careers", "href": "/careers", "type": "secondary" },
+    { "label": "FAQ", "href": "/faq", "type": "secondary" },
+    { "label": "Privacy", "href": "/privacy", "type": "secondary" },
+    { "label": "Terms", "href": "/terms", "type": "secondary" }
+  ],
+  "mobileTabs": [
+    { "label": "Menu", "href": "/menu", "icon": "utensils" },
+    { "label": "Order", "href": "/order", "icon": "shopping-bag" },
+    { "label": "Reserve", "href": "/reserve", "icon": "calendar" },
+    { "label": "Account", "href": "/account", "icon": "user" },
+    { "label": "Locations", "href": "/locations", "icon": "map-pin" }
+  ]
+}
