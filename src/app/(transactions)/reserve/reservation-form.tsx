@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useTransition, useState, useActionState } from "react";
+import { useMemo, useState, useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -22,7 +22,7 @@ type ReservationFormProps = {
 };
 
 export function ReservationForm({ locations }: ReservationFormProps) {
-  const [state, action] = useActionState<ReservationFormState>(
+  const [state, action, pending] = useActionState<ReservationFormState, FormData>(
     createReservationAction,
     initialReservationFormState,
   );
@@ -32,14 +32,10 @@ export function ReservationForm({ locations }: ReservationFormProps) {
     return toLocalInputValue(date);
   }, []);
   const [requestedTime, setRequestedTime] = useState<string>(defaultRequestedTime);
-  const [pending, startTransition] = useTransition();
-
   return (
     <Card className="border-primary/15 bg-white/95">
       <form
-        action={(formData) => {
-          startTransition(() => action(formData));
-        }}
+        action={action}
         className="grid gap-6"
       >
         <CardContent className="grid gap-6 p-8">

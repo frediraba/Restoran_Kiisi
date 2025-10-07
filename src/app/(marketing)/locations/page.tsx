@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocations } from "@/lib/data";
+import { parseLocationAddress } from "@/lib/location-address";
 
 export default async function LocationsPage() {
   const locations = await getLocations();
@@ -22,28 +23,32 @@ export default async function LocationsPage() {
         </div>
       </section>
       <div className="grid gap-6 md:grid-cols-2">
-        {locations.map((location) => (
-          <Card key={location.id} className="h-full border-border/70">
-            <CardHeader className="p-6 pb-0">
-              <CardTitle className="text-xl">{location.name}</CardTitle>
-              <CardDescription>
-                {location.address?.street}
-                <br />
-                {location.address?.city}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4 p-6 pt-4 text-sm text-muted-foreground">
-              <p>Reservations: {location.phone ?? "+372 5555 1234"}</p>
-              <Link
-                href={`/locations/${location.slug}`}
-                className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition hover:text-primary/80"
-              >
-                View details
-                <span aria-hidden>→</span>
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
+        {locations.map((location) => {
+          const address = parseLocationAddress(location.address);
+
+          return (
+            <Card key={location.id} className="h-full border-border/70">
+              <CardHeader className="p-6 pb-0">
+                <CardTitle className="text-xl">{location.name}</CardTitle>
+                <CardDescription>
+                  {address?.street ?? null}
+                  {address?.street && address?.city ? <br /> : null}
+                  {address?.city ?? null}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4 p-6 pt-4 text-sm text-muted-foreground">
+                <p>Reservations: {location.phone ?? "+372 5555 1234"}</p>
+                <Link
+                  href={`/locations/${location.slug}`}
+                  className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition hover:text-primary/80"
+                >
+                  View details
+                  <span aria-hidden>→</span>
+                </Link>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

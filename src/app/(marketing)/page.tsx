@@ -7,6 +7,7 @@ import { Button, buttonClasses } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getLocations, getPromotions } from "@/lib/data";
+import { parseLocationAddress } from "@/lib/location-address";
 import { cn } from "@/lib/utils";
 
 const heroHighlights = [
@@ -176,37 +177,44 @@ async function LocationsSection() {
         </Link>
       </header>
       <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {locations.map((location) => (
-          <Card key={location.id} className="border-primary/15 bg-white/95">
-            <CardHeader className="pb-4">
-              <CardTitle className="text-2xl">{location.name}</CardTitle>
-              <CardDescription>
-                {location.address?.street}
-                <br />
-                {location.address?.city}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-5 pt-0 text-sm text-muted-foreground">
-              <div>
-                <p className="font-medium text-foreground">Dining style</p>
-                <p>Chef-led tasting menus with vegetarian pairings available.</p>
-              </div>
-              <Separator className="bg-primary/15" />
-              <div>
-                <p className="font-medium text-foreground">Today&apos;s service</p>
-                <p>Open from 12:00 – 22:00 with walk-in lounge from 16:00.</p>
-              </div>
-            </CardContent>
-            <CardFooter className="bg-primary/5">
-              <Link href={`/locations/${location.slug}`} className={cn(buttonClasses({ variant: "link" }), "text-primary")}>
-                View details
-              </Link>
-              <Button variant="ghost" size="sm" className="text-xs text-primary/80 hover:text-primary">
-                Map &amp; directions
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
+        {locations.map((location) => {
+          const address = parseLocationAddress(location.address);
+
+          return (
+            <Card key={location.id} className="border-primary/15 bg-white/95">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-2xl">{location.name}</CardTitle>
+                <CardDescription>
+                  {address?.street ?? null}
+                  {address?.street && address?.city ? <br /> : null}
+                  {address?.city ?? null}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-5 pt-0 text-sm text-muted-foreground">
+                <div>
+                  <p className="font-medium text-foreground">Dining style</p>
+                  <p>Chef-led tasting menus with vegetarian pairings available.</p>
+                </div>
+                <Separator className="bg-primary/15" />
+                <div>
+                  <p className="font-medium text-foreground">Today&apos;s service</p>
+                  <p>Open from 12:00 � 22:00 with walk-in lounge from 16:00.</p>
+                </div>
+              </CardContent>
+              <CardFooter className="bg-primary/5">
+                <Link
+                  href={`/locations/${location.slug}`}
+                  className={cn(buttonClasses({ variant: "link" }), "text-primary")}
+                >
+                  View details
+                </Link>
+                <Button variant="ghost" size="sm" className="text-xs text-primary/80 hover:text-primary">
+                  Map &amp; directions
+                </Button>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
     </section>
   );

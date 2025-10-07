@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 
 import { getLocationBySlug, getMenuWithCategories } from "@/lib/data";
+import { parseLocationAddress } from "@/lib/location-address";
 
 function formatPrice(value: unknown) {
   if (typeof value === "number") {
@@ -32,6 +33,7 @@ export default async function LocationDetailPage({
   }
 
   const categories = await getMenuWithCategories(slug);
+  const address = parseLocationAddress(location.address);
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-6 py-12">
@@ -44,9 +46,11 @@ export default async function LocationDetailPage({
       </nav>
       <header className="space-y-2">
         <h1 className="text-3xl font-semibold text-neutral-900">{location.name}</h1>
-        <p className="text-sm text-neutral-500">
-          {location.address?.street}, {location.address?.city}
-        </p>
+        {address ? (
+          <p className="text-sm text-neutral-500">
+            {[address.street, address.city].filter(Boolean).join(", ")}
+          </p>
+        ) : null}
         {location.phone ? <p className="text-sm text-neutral-500">Phone: {location.phone}</p> : null}
       </header>
       <section className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">

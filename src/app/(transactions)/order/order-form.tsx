@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useTransition, useActionState } from "react";
+import { useEffect, useMemo, useRef, useState, useActionState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -41,7 +41,10 @@ type OrderFormProps = {
 };
 
 export function OrderForm({ locations, menuItems }: OrderFormProps) {
-  const [state, action] = useActionState<OrderFormState>(createOrderAction, initialOrderFormState);
+  const [state, action, pending] = useActionState<OrderFormState, FormData>(
+    createOrderAction,
+    initialOrderFormState,
+  );
   const [lines, setLines] = useState<OrderLineState[]>(() => {
     if (menuItems.length === 0) {
       return [];
@@ -58,7 +61,6 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
   const defaultReadyAt = useMemo(() => getDefaultLocalValue(18, 0), []);
   const [requestedTime, setRequestedTime] = useState<string>(defaultReadyAt);
   const [customTime, setCustomTime] = useState(false);
-  const [pending, startTransition] = useTransition();
 
   const quickPicks = useMemo(
     () => [
@@ -182,14 +184,7 @@ export function OrderForm({ locations, menuItems }: OrderFormProps) {
 
   return (
     <Card className="border-primary/15 bg-white/95">
-      <form
-        action={(formData) => {
-          startTransition(() => {
-            action(formData);
-          });
-        }}
-        className="grid gap-6"
-      >
+      <form action={action} className="grid gap-6">
         <CardContent className="grid gap-6 p-8">
           <div className="grid gap-2">
             <Label htmlFor="location">Location</Label>

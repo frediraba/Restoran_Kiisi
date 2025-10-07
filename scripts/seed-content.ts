@@ -1,4 +1,4 @@
-﻿import { PrismaClient, Prisma } from "@prisma/client";
+import { NavigationLinkType, PrismaClient, Prisma } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 
 const prisma = new PrismaClient();
@@ -157,7 +157,7 @@ async function seedMenu(locationId: string) {
       slug: "rye-crusted-goat-cheese",
       categoryId: starters.id,
       name: "Rye-Crusted Goat Cheese",
-      description: "Warm chèvre, fermented lingonberry glaze",
+      description: "Warm ch�vre, fermented lingonberry glaze",
       price: new Prisma.Decimal("10.50"),
       dietaryTags: ["vegetarian"],
       spiceLevel: "MILD" as const,
@@ -327,43 +327,45 @@ async function seedNavigation() {
   const secondary = ["Offers", "Gift Cards", "Catering", "Events", "Careers", "FAQ", "Privacy", "Terms"];
   const mobile = ["Menu", "Order", "Reserve", "Account", "Locations"];
 
+  const navigationData: Prisma.NavigationLinkCreateManyInput[] = [
+    ...primary.map((label, index) => ({
+      label,
+      type: NavigationLinkType.PRIMARY,
+      href: `/${label === "Menu" ? "menu" : label.toLowerCase()}`,
+      priority: index,
+    })),
+    ...secondary.map((label, index) => ({
+      label,
+      type: NavigationLinkType.SECONDARY,
+      href: `/${label.toLowerCase().replace(/\s+/g, "-")}`,
+      priority: index,
+    })),
+    ...mobile.map((label, index) => ({
+      label,
+      type: NavigationLinkType.MOBILE,
+      href: `/${label === "Menu" ? "menu" : label.toLowerCase()}`,
+      priority: index,
+    })),
+  ];
+
   await prisma.navigationLink.createMany({
-    data: [
-      ...primary.map((label, index) => ({
-        label,
-        type: "PRIMARY",
-        href: `/${label === "Menu" ? "menu" : label.toLowerCase()}`,
-        priority: index,
-      })),
-      ...secondary.map((label, index) => ({
-        label,
-        type: "SECONDARY",
-        href: `/${label.toLowerCase().replace(/\s+/g, "-")}`,
-        priority: index,
-      })),
-      ...mobile.map((label, index) => ({
-        label,
-        type: "MOBILE",
-        href: `/${label === "Menu" ? "menu" : label.toLowerCase()}`,
-        priority: index,
-      })),
-    ],
+    data: navigationData,
   });
 }
 
 async function main() {
-  console.info("🌱 Seeding Restoran Kiisi content...");
+  console.info("?? Seeding Restoran Kiisi content...");
   await resetDatabase();
   const location = await seedLocations();
   await seedMenu(location.id);
   await seedPromotions();
   await seedNavigation();
-  console.info("✅ Seed complete");
+  console.info("? Seed complete");
 }
 
 main()
   .catch((error) => {
-    console.error("❌ Seed failed", error);
+    console.error("? Seed failed", error);
     process.exitCode = 1;
   })
   .finally(async () => {
