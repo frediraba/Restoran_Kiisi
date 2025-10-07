@@ -15,7 +15,8 @@
         "revalidate:hours": "tsx scripts/revalidate-hours.ts",
         "test:lh": "echo \"Lighthouse smoke pending manual run\"",
         "test": "vitest run",
-        "test:e2e": "playwright test"
+        "test:e2e": "playwright test",
+        "check:vercel-env": "tsx scripts/vercel/ensure-env.ts"
     },
     "dependencies": {
         "@opentelemetry/api-logs": "^0.205.0",

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { buttonClasses } from "@/components/ui/button";
 import {
@@ -142,18 +143,18 @@ export default function GiftCardsPage() {
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="flex flex-col gap-3 sm:flex-row">
-              <a
+              <Link
                 href="/locations"
                 className={cn(buttonClasses(), "flex-1 justify-center")}
               >
                 Find locations
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/contact"
                 className={cn(buttonClasses({ variant: "outline" }), "flex-1 justify-center")}
               >
                 Arrange digital delivery
-              </a>
+              </Link>
             </div>
             <p className="text-sm text-muted-foreground">
               Prefer a bespoke experience? Our guest relations team can curate progressive tasting journeys, wine pairings,
@@ -180,9 +181,9 @@ export default function GiftCardsPage() {
             </ul>
           </CardContent>
           <CardFooter className="justify-start bg-transparent px-8 py-6">
-            <a href="/terms" className="text-sm font-semibold text-primary transition hover:text-primary/80">
+            <Link href="/terms" className="text-sm font-semibold text-primary transition hover:text-primary/80">
               Read full terms of service
-            </a>
+            </Link>
           </CardFooter>
         </Card>
       </section>
@@ -209,12 +210,12 @@ export default function GiftCardsPage() {
               >
                 Contact concierge
               </a>
-              <a
+              <Link
                 href="/events"
                 className={cn(buttonClasses({ variant: "outline" }), "flex-1 justify-center")}
               >
                 Explore private events
-              </a>
+              </Link>
             </div>
           </CardContent>
         </Card>
