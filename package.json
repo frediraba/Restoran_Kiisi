@@ -5,35 +5,6 @@
     "engines": {
         "node": "^20"
     },
-<<<<<<< HEAD
-    "scripts": {
-        "dev": "next dev --turbopack",
-        "build": "next build --turbopack",
-        "start": "next start",
-        "lint": "eslint",
-        "seed:content": "tsx scripts/seed-content.ts",
-        "seed:profile": "tsx scripts/seed-profile.ts",
-        "revalidate:hours": "tsx scripts/revalidate-hours.ts",
-        "test:lh": "echo \"Lighthouse smoke pending manual run\"",
-        "test": "vitest run",
-        "test:e2e": "playwright test"
-    },
-    "dependencies": {
-        "@opentelemetry/api-logs": "^0.205.0",
-        "@prisma/client": "^5.19.0",
-        "bcryptjs": "^3.0.2",
-        "next": "15.5.4",
-        "next-auth": "^4.24.7",
-        "react": "19.1.0",
-        "react-dom": "19.1.0"
-    },
-    "devDependencies": {
-        "@eslint/eslintrc": "^3",
-        "@playwright/test": "^1.48.0",
-        "@tailwindcss/postcss": "^4",
-        "@testing-library/jest-dom": "^6.4.2",
-        "@testing-library/react": "^16.3.0",
-=======
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build --turbopack",
@@ -61,15 +32,13 @@
         "@playwright/test": "^1.48.0",
         "@tailwindcss/postcss": "^4",
         "@testing-library/jest-dom": "^6.4.2",
-        "@testing-library/react": "^14.2.1",
->>>>>>> cf33733220b54065eff959e22a5c8a6b6d5e867a
+        "@testing-library/react": "^16.3.0",
         "@testing-library/user-event": "^14.5.2",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "@types/testing-library__jest-dom": "^6.0.0",
         "@vercel/otel": "^2.0.1",
-<<<<<<< HEAD
         "dotenv": "^17.2.3",
         "eslint": "^9",
         "eslint-config-next": "15.5.4",
@@ -81,16 +50,3 @@
         "vitest": "^2.0.5"
     }
 }
-=======
-        "dotenv": "^17.2.3",
-        "eslint": "^9",
-        "eslint-config-next": "15.5.4",
-        "jsdom": "^27.0.0",
-        "prisma": "^5.19.0",
-        "tailwindcss": "^4",
-        "tsx": "^4.15.7",
-        "typescript": "^5",
-        "vitest": "^2.0.5"
-    }
-}
->>>>>>> cf33733220b54065eff959e22a5c8a6b6d5e867a
