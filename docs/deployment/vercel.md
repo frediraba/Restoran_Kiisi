@@ -1,85 +1,97 @@
-# Vercel Deployment Guide
+# Vercel Deployment Guide (Hobby Plan)
 
-This guide documents the production rollout process for Restoran Kiisi on [Vercel](https://vercel.com/). It assumes you already have a GitHub repository for the application and access to the PlanetScale database defined in `prisma/schema.prisma`.
+This guide captures the deployment flow defined in `specs/002-i-want-to/spec.md` and its clarifications. It is tailored for the single maintainer operating on the Vercel **Hobby** plan in region `fra1`, with automatic deployments triggered from the `main` branch.
+
+## Clarification Snapshot
+- Rollback is **manual**: redeploy a previously successful commit from the Vercel dashboard when production fails.
+- Validation URL is private: only the maintainer needs access, retrieved directly from the dashboard.
+- Deployment health is determined by the dashboard status feed; failed builds can remain until manually fixed.
 
 ## Prerequisites
+- Vercel account with access to the `restoran-kiisi` project.
+- PlanetScale database credentials (pooled + direct) stored securely.
+- Node.js 20.x and npm 10.x locally for verification and tooling.
+- Vercel CLI installed (`npm install -g vercel`) if you prefer command line workflows.
+- Required environment secrets prepared:
 
-- Vercel account with permission to create projects and environment variables.
-- PlanetScale MySQL database provisioned in an EU region (e.g. `eu-central`), with credentials for both pooled (use in app) and direct connections.
-- Node.js 20.x and npm 10.x locally for running migrations or verifying builds.
+| Key | Purpose | Scope |
+| --- | --- | --- |
+| `DATABASE_URL` | Prisma client connection string | Build + Runtime |
+| `DIRECT_DATABASE_URL` | Prisma migration connection string | Build + Runtime |
+| `NEXTAUTH_SECRET` | NextAuth session encryption | Runtime |
+| `NEXTAUTH_URL` | Production callback base URL | Runtime |
+| `ORDER_FORCE_CLOSED` *(optional)* | Pause ordering flows | Runtime |
 
-## 1. Prepare environment variables
+## 1. Prepare Environment Variables Locally
+1. Copy `.env.example` to `.env` if needed.
+2. Populate the required keys above using secrets from PlanetScale and your secret manager.
+3. Verify the values by running local smoke tests (`npm run lint`, `npm test`).
+4. Run `npm run check:vercel-env` to confirm required keys are available.
+   - Success shows `[check:vercel-env] All required Vercel environment variables are present.`
+   - Failures exit with code 1 and list missing keys to provision via `vercel env add`.
 
-1. Copy `.env.example` to `.env`.
-2. Update the placeholders with real values from PlanetScale and your secret manager:
-   - `DATABASE_URL` – Prisma client connection string (PlanetScale pooled).
-   - `DIRECT_DATABASE_URL` – Direct connection string used for migrations.
-   - `NEXTAUTH_SECRET` – 32+ character random string. You can generate one with `openssl rand -base64 32`.
-   - `NEXTAUTH_URL` – Production URL (e.g. `https://restoran-kiisi.vercel.app`).
-   - Optionally define `ORDER_FORCE_CLOSED=true` when you need to stop online ordering temporarily.
-3. Commit **only** `.env.example`. Never commit secrets.
+## 2. Align Vercel Project Settings
+1. Link the repository (`vercel link`) or confirm the GitHub integration is active.
+2. Ensure the project uses the Next.js preset with commands:
+   - Install: `npm install`
+   - Build: `npm run build`
+   - Output directory: `.vercel/output`
+3. Confirm the runtime region is `fra1` (see `vercel.json`).
+4. Restrict automatic deployments to the `main` branch.
 
-## 2. Run database migrations
-
-Before the first deploy (and whenever Prisma schema changes), run migrations against PlanetScale from your local machine or CI environment:
+## 3. Seed or Migrate Data (Optional)
+Run migrations or seed scripts against PlanetScale before the first deploy:
 
 ```bash
 npm install
 npx prisma migrate deploy --schema=prisma/schema.prisma
-```
-
-Seed data is available to populate demo content:
-
-```bash
+# Optional seeds
 npm run seed:content
 npm run seed:profile
 ```
 
-(Seeds should target non-production environments.)
+## 4. Initiate Deployment
+1. Merge or push to `main`.
+2. Monitor the deployment in the Vercel dashboard. The build must report `Ready` before production use.
+3. Retrieve the production URL from the dashboard for personal validation.
 
-## 3. Create the Vercel project
+## 5. Post-Deployment Checklist
+- Navigate through `/`, `/menu`, `/order`, and `/account` to validate marketing and transactional flows.
+- Confirm logs/metrics appear in Vercel Observability (`instrumentation.ts`).
+- Record the validation timestamp in your operations notes.
 
-1. Push your repository to GitHub.
-2. In Vercel, click **New Project** and import the repository.
-3. Vercel detects the Next.js framework automatically. Keep the defaults:
-   - Install Command: `npm install`
-   - Build Command: `npm run build`
-   - Output Directory: `.vercel/output`
-4. Set the deployment region to `fra1` (Frankfurt) to keep runtime close to the PlanetScale EU database. This is configured in `vercel.json` but can also be set in the Vercel UI under **Settings → Functions**.
+## CLI Reference
+Run these commands from the repository root when you need to operate purely via the Vercel CLI:
 
-## 4. Configure environment variables in Vercel
+```sh
+# Link local repo to the Vercel project
+vercel link --project restoran-kiisi
 
-1. In the project dashboard, open **Settings → Environment Variables**.
-2. Add the same keys and values from your local `.env` file.
-3. For `NEXTAUTH_URL`, set environment-specific values:
-   - Production: `https://your-domain`.
-   - Preview: `https://<branch>-<project>.vercel.app`.
-4. Click **Save** and redeploy when prompted.
+# Provision secrets (you will be prompted for each value)
+vercel env add DATABASE_URL production
+vercel env add DIRECT_DATABASE_URL production
+vercel env add NEXTAUTH_SECRET production
+vercel env add NEXTAUTH_URL production
+# Optional toggle
+# vercel env add ORDER_FORCE_CLOSED production
 
-## 5. Trigger the first deployment
+# Trigger a production deployment if necessary
+vercel deploy --prod
+```
 
-1. Merge your changes to the default branch.
-2. Vercel builds automatically. You can also trigger a deployment manually with `vercel --prod` if using the CLI.
-3. Wait for the build to complete and verify the deployment logs. Next.js server actions under `app/(transactions)` run on the Node.js runtime; marketing pages use the Edge network for low-latency caching.
-
-## 6. Post-deployment validation
-
-- Visit `/` and `/menu` to confirm static marketing pages render via Edge.
-- Visit `/order` and `/account` to validate transactional flows. Ensure orders persist in PlanetScale.
-- Confirm logs and traces arrive in Vercel Observability (configured via `instrumentation.ts`).
-- If marketing pages show stale data, run `npm run revalidate:hours` locally and redeploy.
+### Dashboard Validation Notes
+- Open the project dashboard and monitor the **Deployments** feed for a `Ready` status.
+- Use the **Visit** button to grab the production URL for personal validation (per clarification, no broadcast required).
+- The **Activity** tab captures build logs you can reference when `npm run check:vercel-env` reports missing secrets.
 
 ## Troubleshooting
-
-| Symptom | Likely cause | Fix |
+| Symptom | Likely Cause | Resolution |
 | --- | --- | --- |
-| Build fails with Prisma errors | Missing `DATABASE_URL`/`DIRECT_DATABASE_URL` or Prisma schema migrations not applied | Double-check env vars and run `prisma migrate deploy` |
-| Authentication fails in production | `NEXTAUTH_SECRET` missing or mismatch between environments | Rotate `NEXTAUTH_SECRET` and redeploy |
-| Orders close outside business hours | `LocationHours` data missing or `ORDER_FORCE_CLOSED` set to `true` | Seed data / toggle flag |
-| Slow transactional routes | Deployment running outside EU region | Verify `preferredRegion` on layouts and `regions` in `vercel.json` |
+| Build fails with Prisma errors | Missing `DATABASE_URL`/`DIRECT_DATABASE_URL` or unapplied migrations | Ensure secrets exist in Vercel and rerun `prisma migrate deploy`. |
+| Auth errors post-deploy | `NEXTAUTH_SECRET` missing or different between environments | Rotate the secret, redeploy, and update `.env.example` if needed. |
+| Slow transactional pages | Deployment region not `fra1` | Update `vercel.json` and redeploy. |
+| Orders disabled unexpectedly | `ORDER_FORCE_CLOSED` set to `true` | Remove/flip the flag and redeploy. |
 
-## Ongoing maintenance
-
-- Rotate secrets every 90 days.
-- Monitor uptime via Vercel checks and custom metrics described in `docs/ops-runbook.md`.
-- Use the `ORDER_FORCE_CLOSED` flag during incidents to pause new orders while keeping marketing pages online.
+## Next Steps
+- Re-run `npm run check:vercel-env` whenever secrets change.
+- Use `docs/operations/vercel-rollback.md` if you need to recover via manual redeploy.
